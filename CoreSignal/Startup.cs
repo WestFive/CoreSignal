@@ -37,7 +37,6 @@ namespace CoreSignal.SignalR
 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -47,9 +46,7 @@ namespace CoreSignal.SignalR
             {
                 app.UseDeveloperExceptionPage();
 
-                // Browser Link is not compatible with Kestrel 1.1.0
-                // For details on enabling Browser Link, see https://go.microsoft.com/fwlink/?linkid=840936
-                // app.UseBrowserLink();
+                
             }
             else
             {
