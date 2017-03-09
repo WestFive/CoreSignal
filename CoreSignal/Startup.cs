@@ -55,8 +55,8 @@ namespace CoreSignal.SignalR
 
             app.UseStaticFiles();
             app.UseWebSockets();//加入Websocket和SignalR支持
-            app.UseSignalR();
-            app.UseCors(builder=>builder.WithOrigins("http://localhost"));
+            app.UseSignalR(); 
+            app.UseCors(builder=>builder.WithOrigins().AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials().Build());
             
 
             app.UseMvc(routes =>

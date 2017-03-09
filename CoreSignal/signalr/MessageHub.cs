@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace CoreSignal.signalr
 {
-    [HubName("消息服务")]
     public class MessageHub : Hub
     {
         /// <summary>
@@ -184,7 +183,7 @@ namespace CoreSignal.signalr
                     });//添加会话对象
 
                 }
-                else if (Context.QueryString["Type"] == "Broswer")
+                else //则为浏览器端
                 {
                     sessionObjectList.Add(new SessionObj
                     {

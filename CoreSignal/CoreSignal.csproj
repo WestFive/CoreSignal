@@ -32,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Scripts\" />
   </ItemGroup>
 
 </Project>
