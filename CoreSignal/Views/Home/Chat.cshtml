@@ -2,4 +2,122 @@
     ViewData["Title"] = "Chat";
     //Chat
 }
-<h1>Hello World</h1>
+<!DOCTYPE html5>
+<html lang="eng">
+<head>
+    <meta charset="utf-8" />
+    <title>none</title>
+    <script src="http://oion935wi.bkt.clouddn.com/jquery-1.6.4.min.js"></script>
+    <script src="http://oion935wi.bkt.clouddn.com/jquery.signalR-2.2.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://localhost:5000/signalr/hubs"></script>
+    <style>
+        body {
+            background-image: url("http://ohe5u4k9s.bkt.clouddn.com/bg.jpg");
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+            color: #333333;
+            background-color: #ffffff;
+        }
+
+        div {
+            border-radius: 5%;
+        }
+
+        #ChildDiv {
+            width: 50%;
+            height: 50px;
+        }
+
+        #MajiKo {
+            width: 50%;
+            height: 50%;
+            margin-left: 55%;
+        }
+
+        #TText {
+            width: 200%;
+            height: 100%;
+            border:1px solid;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="col-md-12" id="ValueDiv">
+          <select id="Select-ConncetionID" onchange="show_sub(this.options[this.options.selectedIndex].value)">
+          
+          </select>
+    </div>
+    <div>
+        <textarea id="TText" style="width:300px;height:400px"></textarea>
+        <input type="text" id="IDText" value=""/> <button id="BtnChange" onclick="submit_change()">提交修改</button>
+    </div>
+
+
+    <script type="text/javascript">
+
+        $.connection.hub.start().done(function () {
+            alert("连接服务器成功");
+        });
+
+        var proxy = $.connection.messageHub;
+        var list1 = new Array();
+       
+        proxy.client.GetUserList = function (datas) {
+         
+            var MessageStatus = JSON.parse(datas);
+            list1 = MessageStatus;
+            $("#Slect-ConnectionID child").empty("");
+            $("#Slect-ConnectionID").empty("");
+            $("#TText").empty("");
+
+            document.getElementById("TText").value = datas;
+            for (var i = 0; i < MessageStatus.length; i++)
+            {
+                $("#Select-ConncetionID").append(
+                    "<option value=" + MessageStatus[i].MessageContent.ConnectionID + ">" + MessageStatus[i].MessageContent.ConnectionID + "</option>"
+                    
+                );
+                document.getElementById("IDText").value = MessageStatus[0].MessageContent.ConnectionID;
+            }
+        }
+
+        function show_sub(v)
+        {
+            alert("选中了ID" + v);
+            for (var i = 0; i < list1.length;i++)
+            {
+                temp = list1[i];
+                if (temp.MessageContent.ConnectionID == v)
+                {
+                    $("TText").empty("");
+                    document.getElementById("TText").value = JSON.stringify(temp);
+                    document.getElementById("IDText").value = v;
+                }
+
+            }
+
+        }
+        function submit_change()
+        {
+            
+
+            proxy.server.ChangeGeteMessage(document.getElementById("IDText").value,document.getElementById("TText").value);
+               
+
+        }
+
+
+
+
+
+
+    </script>
+</body>
+</html>
+
+

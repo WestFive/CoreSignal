@@ -29,11 +29,14 @@ namespace CoreSignal.SignalR
         {
             // Add framework services.
             services.AddMvc();
-            services.AddSignalR(options=> {
+            services.AddSignalR(options =>
+            {
                 options.Hubs.EnableDetailedErrors = true;
             });
-            services.AddCors();
-           
+
+            services.AddCors(options => options.AddPolicy("CorsSample",
+          p => p.WithOrigins("http://localhost:8080", "http://localhost","ALL").AllowAnyMethod().AllowAnyHeader()));
+
 
         }
 
@@ -46,7 +49,7 @@ namespace CoreSignal.SignalR
             {
                 app.UseDeveloperExceptionPage();
 
-                
+
             }
             else
             {
@@ -55,9 +58,9 @@ namespace CoreSignal.SignalR
 
             app.UseStaticFiles();
             app.UseWebSockets();//加入Websocket和SignalR支持
-            app.UseSignalR(); 
-            app.UseCors(builder=>builder.WithOrigins().AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials().Build());
-            
+            app.UseSignalR();
+            app.UseCors("CrosSample");
+
 
             app.UseMvc(routes =>
             {
@@ -65,7 +68,7 @@ namespace CoreSignal.SignalR
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            
+
         }
     }
 }

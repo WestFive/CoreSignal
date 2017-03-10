@@ -1,5 +1,6 @@
 ﻿using Data.Common;
 using Data.Model;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Hubs;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace CoreSignal.signalr
 {
+    [EnableCors("CorsSample")]
     public class MessageHub : Hub
     {
         /// <summary>
@@ -44,6 +46,7 @@ namespace CoreSignal.signalr
             }
         }
 
+        
 
         /// <summary>
         /// 刷新推送获取会话列表。
