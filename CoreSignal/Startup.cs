@@ -28,6 +28,10 @@ namespace CoreSignal.SignalR
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+                                                                 .AllowAnyMethod()
+                                                                  .AllowAnyHeader()
+                                                                  .AllowCredentials()));
             // Add framework services.
             services.AddMvc();
             services.AddSignalR(options =>
@@ -35,16 +39,14 @@ namespace CoreSignal.SignalR
                 options.Hubs.EnableDetailedErrors = true;
             });
 
-            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
-                                                                .AllowAnyMethod()
-                                                                 .AllowAnyHeader()
-                                                                 .AllowCredentials()));
+
 
 
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            app.UseCors("AllowAll");
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -62,7 +64,7 @@ namespace CoreSignal.SignalR
             app.UseStaticFiles();
             app.UseWebSockets();//加入Websocket和SignalR支持
             app.UseSignalR();
-            app.UseCors("AllowAll");
+          
 
 
             app.UseMvc(routes =>
