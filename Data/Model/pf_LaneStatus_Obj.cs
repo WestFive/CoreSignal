@@ -137,7 +137,7 @@ namespace Data.Model
         /// </summary>
         public string TopDamagePicUrl { get; set; }
         
-        public  pf_Containers_Struct Containers { get; set; }
+        public  pf_Containers_Struct []Containers { get; set; }
 
 
 

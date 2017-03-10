@@ -56,28 +56,6 @@
             </tr>
         </table>
     </div>
-    <!--<div class="span4" id="ChildDiv">
-        <table class="table table-bordered" id="Child-Table">
-            <tr>
-                <td>CarName</td>
-                <td>CarType</td>
-                <td>CarID</td>
-            </tr>
-        </table>
-    </div>-->
-    <div class="span4" id="MajiKo">
-        <p id="textCode">未连接</p>
-        <textarea id="TText">
-            前端接口：
-               //<script src="http://localhost:53418/signalr/hubs"></script>
-            引入地址
-            var proxy = $.connection.messageHub;//连接hub
-
-            proxy.client.GetSessionList = function (datas) //监听方法
-       
-        </textarea>
-
-    </div>
 
 
     <script type="text/javascript">
@@ -90,9 +68,9 @@
 
         proxy.client.GetSessionList = function (datas) {
             var objs = JSON.parse(datas);
-
+            $("#Main-Table  tr:not(:first)").empty("");
             for (var i = 0; i < objs.length; i++) {
-                $("#Main-Table  tr:not(:first)").empty("");
+           
 
                 $('#Main-Table').append(
                     "<tr><td>" + objs[i].ConnectionID

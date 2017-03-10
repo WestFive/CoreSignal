@@ -68,9 +68,9 @@ namespace CoreSignal.signalr
         {
             try
             {
-                if (messageContextList.Count(x => x.MessageContent.ConncetionID.ToString() == SendConnectionID) > 0)
+                if (messageContextList.Count(x => x.MessageContent.ConnectionID.ToString() == SendConnectionID) > 0)
                 {
-                    Pf_MessageStatus_Obj temp = messageContextList.FirstOrDefault(x => x.MessageContent.ConncetionID.ToString() == SendConnectionID);
+                    Pf_MessageStatus_Obj temp = messageContextList.FirstOrDefault(x => x.MessageContent.ConnectionID.ToString() == SendConnectionID);
                     temp.MessageContent.LaneStatus = JsonHelper.DeserializeJsonToObject<pf_LaneStatus_Obj>(JsonMessage);
                     Clients.Client(SendConnectionID).reciveStatus(DataHepler.EncodingMessageStatus(temp));
                     ///修改后并传递给车道。
@@ -102,7 +102,7 @@ namespace CoreSignal.signalr
             try
             {
                 var temp = DataHepler.DecodingMessageStatus(JsonMessage);
-                temp.MessageContent.ConncetionID = Context.ConnectionId;
+                temp.MessageContent.ConnectionID = Context.ConnectionId;
                 temp.MessageContent.UpdateTime = DateTime.Now.ToString();
                 lock (messageContextList)
                 {
@@ -146,7 +146,7 @@ namespace CoreSignal.signalr
                     Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
                     obj.MessageContent = new pf_MessageStatusContext_Obj();
                     obj.MessageContent.LaneStatus = new pf_LaneStatus_Obj();
-                    obj.MessageContent.ConncetionID = Context.ConnectionId;//保存ID
+                    obj.MessageContent.ConnectionID = Context.ConnectionId;//保存ID
                     obj.MessageContent.LaneID = Context.QueryString["ID"];
                     if (messageContextList.Count(x => x.MessageContent.LaneID == obj.MessageContent.LaneID) > 0)//数据更新
                     {
@@ -162,35 +162,35 @@ namespace CoreSignal.signalr
                         sessionObjectList.Add(new SessionObj
                         {
                             ConnectionID = Context.ConnectionId,
-                            IPAddress = Context.Request.Headers["Host"],
-                            Port = Context.Request.Headers["Host"],
+                            IPAddress = Context.Headers["HOST"],
+                            Port = Context.Headers["HOST"],
                             ClientName = obj.MessageContent.LaneID,
                             ClientType = "LaneAgent",
                             ConnectionTime = DateTime.Now.ToString()
-                        });//添加会话
+                        });//添加会话对象
                     }
                 }
-                else if (Context.QueryString["Type"] == "Watch")//车道监控
+                else if (Context.QueryString["Type"] == "Watch")//表示是车道监控
                 {
                     sessionObjectList.Add(new SessionObj
                     {
                         ConnectionID = Context.ConnectionId,
-                        IPAddress = Context.Request.Headers["Host"],
-                        Port = Context.Request.Headers["Host"],
-                        ClientName = "Winform车道代理" + Context.Request.Headers["Host"],//车道代理+名字=ClientName
+                        IPAddress = Context.Headers["HOST"].ToString(),
+                        Port = Context.Headers["HOST"].ToString(),
+                        ClientName = "Winform车道代理" + Context.Headers["HOST"].ToString(),//车道代理+名字=ClientName
                         ClientType = "Winform",
                         ConnectionTime = DateTime.Now.ToString()
                     });//添加会话对象
 
                 }
-                else //则为浏览器端
+                else //表示为浏览器。
                 {
                     sessionObjectList.Add(new SessionObj
                     {
                         ConnectionID = Context.ConnectionId,
-                        IPAddress = Context.Request.Headers["Host"],
-                        Port = Context.Request.Headers["Host"],
-                        ClientName = "Broswer" + Context.Request.Headers["Host"],//车道代理+名字=ClientName
+                        IPAddress = Context.Headers["HOST"].ToString(),
+                        Port = Context.Headers["HOST"].ToString(),
+                        ClientName = "Broswer" + Context.Headers["HOST"].ToString(),//车道代理+名字=ClientName
                         ClientType = "Broswer",
                         ConnectionTime = DateTime.Now.ToString()
                     });//添加会话对象
@@ -211,9 +211,9 @@ namespace CoreSignal.signalr
             try
             {
                 ///判断是否已经存在该条车道
-                if (messageContextList.Count(x => x.MessageContent.ConncetionID == Context.ConnectionId) > 0)
+                if (messageContextList.Count(x => x.MessageContent.ConnectionID == Context.ConnectionId) > 0)
                 {
-                    var temp = messageContextList.FirstOrDefault(x => x.MessageContent.ConncetionID == Context.ConnectionId);
+                    var temp = messageContextList.FirstOrDefault(x => x.MessageContent.ConnectionID == Context.ConnectionId);
 
                     messageContextList.Remove(temp);
                     //在就移除 退出

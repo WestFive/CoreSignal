@@ -35,7 +35,7 @@ namespace Data.Model
         /// <summary>
         /// 连接ID
         /// </summary>
-        public string ConncetionID { get; set; }
+        public string ConnectionID { get; set; }
         /// <summary>
         /// 更新时间
         /// </summary>
