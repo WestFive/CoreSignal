@@ -11,10 +11,6 @@
   <ItemGroup>
     <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="wwwroot\index.html" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="dotnet-command" Version="1.0.0-preview2" />
     <PackageReference Include="Gray.Microsoft.AspNetCore.SignalR.Messaging" Version="0.2.0" />
