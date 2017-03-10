@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace CoreSignal.SignalR
 {
@@ -34,8 +35,10 @@ namespace CoreSignal.SignalR
                 options.Hubs.EnableDetailedErrors = true;
             });
 
-            services.AddCors(options => options.AddPolicy("CorsSample",
-          p => p.WithOrigins("http://localhost:8080", "http://localhost","ALL").AllowAnyMethod().AllowAnyHeader()));
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+                                                                .AllowAnyMethod()
+                                                                 .AllowAnyHeader()
+                                                                 .AllowCredentials()));
 
 
         }
@@ -59,7 +62,7 @@ namespace CoreSignal.SignalR
             app.UseStaticFiles();
             app.UseWebSockets();//加入Websocket和SignalR支持
             app.UseSignalR();
-            app.UseCors("CrosSample");
+            app.UseCors("AllowAll");
 
 
             app.UseMvc(routes =>

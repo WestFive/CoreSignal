@@ -4,7 +4,7 @@ namespace CoreSignal.Controllers
 {
     public class HomeController : Controller
     {
-        [EnableCors("CorsSample")]
+        [EnableCors("AllowAll")]
         public IActionResult Index()
         {
             return View();
@@ -18,22 +18,21 @@ namespace CoreSignal.Controllers
         }
 
 
-        [EnableCors("CorsSample")]
+        [EnableCors("AllowAll")]
         public IActionResult Contact()
         {
             //ViewData["Message"] = "Your contact page.";
 
             return View();
         }
-
-        [EnableCors("CorsSample")]
+        [EnableCors("AllowAll")]
         public IActionResult Chat()
         {
            
             return View();
         }
 
-        [EnableCors("CorsSample")]
+        [EnableCors("AllowAll")]
         public IActionResult Error()
         {
             return View();

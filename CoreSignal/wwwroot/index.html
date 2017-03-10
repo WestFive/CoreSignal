@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html5>
+<html lang="eng">
+<head>
+    <title>none</title>
+    <script src="http://oion935wi.bkt.clouddn.com/jquery-1.6.4.min.js"></script>
+    <script src="http://oion935wi.bkt.clouddn.com/jquery.signalR-2.2.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://60.205.200.73:5000/signalr/hubs"></script>
+    <style>
+        body {
+            background-image: url("http://ohe5u4k9s.bkt.clouddn.com/bg.jpg");
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+            color: #333333;
+            background-color: #ffffff;
+        }
+
+        div {
+            border-radius: 5%;
+        }
+
+        #ChildDiv {
+            width: 50%;
+            height: 50px;
+        }
+
+        #MajiKo {
+            width: 50%;
+            height: 50%;
+            margin-left: 55%;
+        }
+
+        #TText {
+            width: 75%;
+            height: 75%;
+        }
+    </style>
+</head>
+<body>
+    <div class="span8">
+        <table class="table table-bordered" id="Main-Table">
+            <tr>
+                <td>连接ID</td>
+                <td>地址</td>
+                <td>端口</td>
+                <td>会话类型</td>
+                <td>名称</td>
+                <td>更新时间</td>
+            </tr>
+        </table>
+    </div>
+
+
+    <script type="text/javascript">
+
+        $.connection.hub.url="http://60.205.200.73:5000/signalr/hubs"
+        $.connection.hub.start({xdomain:true}).done(function () {
+            alert("连接服务器成功");
+        });
+
+        var proxy = $.connection.messageHub;
+
+        proxy.client.GetSessionList = function (datas) {
+            var objs = JSON.parse(datas);
+            $("#Main-Table  tr:not(:first)").empty("");
+            for (var i = 0; i < objs.length; i++) {
+
+
+                $('#Main-Table').append(
+                    "<tr><td>" + objs[i].ConnectionID
+                    + "</td><td>" + objs[i].IPAddress
+                    + "</td><td>" + objs[i].Port
+                    + "</td><td>" + objs[i].ClientType
+                    + "</td><td>" + objs[i].ClientName
+                    + "</td><td>" + objs[i].ConnectionTime
+                    + "</td></tr>"
+
+                );
+            }
+
+        }
+
+
+
+
+
+
+
+    </script>
+</body>
+</html>

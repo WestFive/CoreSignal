@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace CoreSignal.signalr
 {
-    [EnableCors("CorsSample")]
+   
     public class MessageHub : Hub
     {
         /// <summary>
