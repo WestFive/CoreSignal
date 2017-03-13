@@ -72,7 +72,7 @@ namespace Data.Common
             }
             catch(Exception ex)
             {
-                return "追加到日志失败";
+               return "追加到日志失败";
             }
 
             // return "追加到日志成功";

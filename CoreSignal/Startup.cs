@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace CoreSignal.SignalR
 {
@@ -50,6 +51,13 @@ namespace CoreSignal.SignalR
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                 
+                 
+
+            }); //获取IP地址 HttpOverrides:1.0.0
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -188,12 +188,15 @@ namespace CoreSignal.signalr
                 }
                 else //表示为浏览器。
                 {
+
+
                     sessionObjectList.Add(new SessionObj
                     {
                         ConnectionID = Context.ConnectionId,
-                        IPAddress = Context.Headers["HOST"].ToString(),
-                        Port = Context.Headers["HOST"].ToString(),
-                        ClientName = "Broswer" + Context.Headers["HOST"].ToString(),//车道代理+名字=ClientName
+                        //IPAddress = Context.,
+                        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
+                        ClientName = "Broswer" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
                         ClientType = "Broswer",
                         ConnectionTime = DateTime.Now.ToString()
                     });//添加会话对象
