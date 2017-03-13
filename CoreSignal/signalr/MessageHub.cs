@@ -165,8 +165,8 @@ namespace CoreSignal.signalr
                         sessionObjectList.Add(new SessionObj
                         {
                             ConnectionID = Context.ConnectionId,
-                            IPAddress = Context.Headers["HOST"],
-                            Port = Context.Headers["HOST"],
+                            IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.ToString(),
+                            Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
                             ClientName = obj.MessageContent.LaneID,
                             ClientType = "LaneAgent",
                             ConnectionTime = DateTime.Now.ToString()
@@ -178,9 +178,9 @@ namespace CoreSignal.signalr
                     sessionObjectList.Add(new SessionObj
                     {
                         ConnectionID = Context.ConnectionId,
-                        IPAddress = Context.Headers["HOST"].ToString(),
-                        Port = Context.Headers["HOST"].ToString(),
-                        ClientName = "Winform车道代理" + Context.Headers["HOST"].ToString(),//车道代理+名字=ClientName
+                        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
+                        ClientName = "Winform车道代理" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
                         ClientType = "Winform",
                         ConnectionTime = DateTime.Now.ToString()
                     });//添加会话对象
