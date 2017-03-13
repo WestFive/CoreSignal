@@ -165,7 +165,7 @@ namespace CoreSignal.signalr
                         sessionObjectList.Add(new SessionObj
                         {
                             ConnectionID = Context.ConnectionId,
-                            IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.ToString(),
+                            IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
                             Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
                             ClientName = obj.MessageContent.LaneID,
                             ClientType = "LaneAgent",
@@ -178,7 +178,7 @@ namespace CoreSignal.signalr
                     sessionObjectList.Add(new SessionObj
                     {
                         ConnectionID = Context.ConnectionId,
-                        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
                         Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
                         ClientName = "Winform车道代理" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
                         ClientType = "Winform",
@@ -194,7 +194,7 @@ namespace CoreSignal.signalr
                     {
                         ConnectionID = Context.ConnectionId,
                         //IPAddress = Context.,
-                        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
                         Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
                         ClientName = "Broswer" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
                         ClientType = "Broswer",

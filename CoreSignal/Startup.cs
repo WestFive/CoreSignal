@@ -53,9 +53,7 @@ namespace CoreSignal.SignalR
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-                 
-                 
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto             
 
             }); //获取IP地址 HttpOverrides:1.0.0
             if (env.IsDevelopment())
