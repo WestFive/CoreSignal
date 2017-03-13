@@ -20,7 +20,7 @@ namespace CoreSignal.signalr
         /// <summary>
         /// 根目录保存日志
         /// </summary>
-        Log log = new Log(AppContext.BaseDirectory);
+        //Log log = new Log(AppContext.BaseDirectory);
         /// <summary>
         /// 车道信息列表。
         /// </summary>
@@ -42,7 +42,7 @@ namespace CoreSignal.signalr
             }
             catch (Exception ex)
             {
-                log.AddErrorText("刷新模块", ex);
+                //log.AddErrorText("刷新模块", ex);
             }
         }
 
@@ -59,7 +59,7 @@ namespace CoreSignal.signalr
             }
             catch (Exception ex)
             {
-                log.AddErrorText("刷新模块", ex);
+                //log.AddErrorText("刷新模块", ex);
             }
         }
 
@@ -83,7 +83,7 @@ namespace CoreSignal.signalr
             }
             catch (Exception ex)
             {
-                log.AddErrorText("修改车道信息", ex);
+                //log.AddErrorText("修改车道信息", ex);
 
             }
         }
@@ -121,7 +121,7 @@ namespace CoreSignal.signalr
             }
             catch (Exception ex)
             {
-                log.AddErrorText("客户端变化", ex);
+                //log.AddErrorText("客户端变化", ex);
             }
         }
 
@@ -202,7 +202,7 @@ namespace CoreSignal.signalr
             }
             catch (Exception ex)
             {
-                log.AddErrorText("连接模块", ex);
+                //log.AddErrorText("连接模块", ex);
             }
 
             return base.OnConnected();
@@ -235,7 +235,7 @@ namespace CoreSignal.signalr
             }
             catch (Exception ex)
             {
-                log.AddErrorText("断开连接模块", ex);
+                //log.AddErrorText("断开连接模块", ex);
             }
 
             //addTolog("断开服务器");
@@ -254,7 +254,7 @@ namespace CoreSignal.signalr
             }
             catch (Exception ex)
             {
-                log.AddErrorText("心跳", ex);
+                //log.AddErrorText("心跳", ex);
             }
         }
 
