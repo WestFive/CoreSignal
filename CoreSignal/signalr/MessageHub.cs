@@ -1,15 +1,12 @@
 ﻿using Data.Common;
 using Data.Model;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Hubs;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
 
 
 namespace CoreSignal.signalr
@@ -21,6 +18,14 @@ namespace CoreSignal.signalr
         /// 根目录保存日志
         /// </summary>
         //Log log = new Log(AppContext.BaseDirectory);
+
+        ///日志记录
+        private readonly ILogger<MessageHub> _logger;
+
+        public MessageHub(ILogger<MessageHub> logger)
+        {
+            _logger = logger;
+        }
         /// <summary>
         /// 车道信息列表。
         /// </summary>
@@ -43,6 +48,8 @@ namespace CoreSignal.signalr
             catch (Exception ex)
             {
                 //log.AddErrorText("刷新模块", ex);
+                _logger.LogError("刷新模块", ex.ToString());
+                
             }
         }
 
@@ -60,6 +67,8 @@ namespace CoreSignal.signalr
             catch (Exception ex)
             {
                 //log.AddErrorText("刷新模块", ex);
+                _logger.LogError("会话列表信息推送模块", ex);
+
             }
         }
 
@@ -84,6 +93,7 @@ namespace CoreSignal.signalr
             catch (Exception ex)
             {
                 //log.AddErrorText("修改车道信息", ex);
+                _logger.LogError("监控修改车道信息变化模块", ex);
 
             }
         }
@@ -122,6 +132,7 @@ namespace CoreSignal.signalr
             catch (Exception ex)
             {
                 //log.AddErrorText("客户端变化", ex);
+                _logger.LogError("车道变化模块", ex);
             }
         }
 
@@ -157,7 +168,7 @@ namespace CoreSignal.signalr
                         //gateList.Remove(temp);
                         temp = obj;
                         // gateList.Add(temp);
-
+                        
                     }
                     else//数据添加
                     {
@@ -171,6 +182,7 @@ namespace CoreSignal.signalr
                             ClientType = "LaneAgent",
                             ConnectionTime = DateTime.Now.ToString()
                         });//添加会话对象
+                        _logger.LogWarning("车道代理{0}连接了", obj.MessageContent.LaneID);
                     }
                 }
                 else if (Context.QueryString["Type"] == "Watch")//表示是车道监控
@@ -185,6 +197,7 @@ namespace CoreSignal.signalr
                         ConnectionTime = DateTime.Now.ToString()
                     });//添加会话对象
 
+                    _logger.LogWarning("车道监控：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
                 }
                 else //表示为浏览器。
                 {
@@ -199,13 +212,16 @@ namespace CoreSignal.signalr
                         ClientName = "Broswer" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
                         ClientType = "Broswer",
                         ConnectionTime = DateTime.Now.ToString()
+                      
                     });//添加会话对象
+                    _logger.LogWarning("浏览器或其他端口：{0},连接了",Context.Request.HttpContext.Connection.RemoteIpAddress);
                 }
                 F5();//刷新
             }
             catch (Exception ex)
             {
                 //log.AddErrorText("连接模块", ex);
+                _logger.LogError("连接模块", ex);
             }
 
             return base.OnConnected();
@@ -223,7 +239,8 @@ namespace CoreSignal.signalr
 
                     messageContextList.Remove(temp);
                     //在就移除 退出
-                    //  log.AddLogText("车道" + temp.LanelID+ "退出了服务器");
+
+                    _logger.LogWarning("车道监控：{0},与服务断开连接", Context.Request.HttpContext.Connection.RemoteIpAddress);
                 }
                 if (sessionObjectList.Count(x => x.ConnectionID == Context.ConnectionId) > 0)
                 {
@@ -233,12 +250,13 @@ namespace CoreSignal.signalr
                     sessionObjectList.Remove(temp);//包含则移除。
 
                 }
-
+                _logger.LogWarning("{0},与服务断开连接", Context.ConnectionId);
                 F5();
             }
             catch (Exception ex)
             {
                 //log.AddErrorText("断开连接模块", ex);
+                _logger.LogError("断开连接模块", ex);
             }
 
             //addTolog("断开服务器");
@@ -258,6 +276,7 @@ namespace CoreSignal.signalr
             catch (Exception ex)
             {
                 //log.AddErrorText("心跳", ex);
+                _logger.LogError("心跳模块", ex);
             }
         }
 

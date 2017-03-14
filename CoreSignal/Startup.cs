@@ -9,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.HttpOverrides;
+using NLog.Extensions.Logging;
+using System.Text;
+using NLog.Web;
 
 namespace CoreSignal.SignalR
 {
@@ -16,6 +19,8 @@ namespace CoreSignal.SignalR
     {
         public Startup(IHostingEnvironment env)
         {
+            env.ConfigureNLog("nlog.config");
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -47,9 +52,12 @@ namespace CoreSignal.SignalR
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);//中文支持
             app.UseCors("AllowAll");
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            loggerFactory.AddConsole(); //设置LOG的触发最小级别为Warnning 系统自带infomation全部不记录。
+            loggerFactory.AddDebug();//添加LOG支持
+            loggerFactory.AddNLog(); //本地的LOG记录。
+            app.AddNLogWeb();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
