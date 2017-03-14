@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using NLog.Extensions.Logging;
 using System.Text;
 using NLog.Web;
+using System.IO;
 
 namespace CoreSignal.SignalR
 {
@@ -19,8 +20,19 @@ namespace CoreSignal.SignalR
     {
         public Startup(IHostingEnvironment env)
         {
-            env.ConfigureNLog("nlog.config");
-
+            if(File.Exists("config/nlog.config"))
+            {
+                env.ConfigureNLog("config/nlog.config");
+            }
+            else if(File.Exists("wwwroot/config/nlog.config"))
+            {
+                env.ConfigureNLog("wwwroot/config/nlog.config");
+            }
+            else
+            {
+                //找不到日志的配置文件。直接不载入。
+            }
+             
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
