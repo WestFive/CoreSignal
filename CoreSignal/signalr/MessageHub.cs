@@ -67,7 +67,7 @@ namespace CoreSignal.signalr
             catch (Exception ex)
             {
                 //log.AddErrorText("刷新模块", ex);
-                _logger.LogError("会话列表信息推送模块", ex);
+                _logger.LogError("会话列表信息推送模块" + ex.ToString());
 
             }
         }
@@ -93,7 +93,7 @@ namespace CoreSignal.signalr
             catch (Exception ex)
             {
                 //log.AddErrorText("修改车道信息", ex);
-                _logger.LogError("监控修改车道信息变化模块", ex);
+                _logger.LogError("监控修改车道信息变化模块" + ex.ToString());
 
             }
         }
@@ -132,7 +132,7 @@ namespace CoreSignal.signalr
             catch (Exception ex)
             {
                 //log.AddErrorText("客户端变化", ex);
-                _logger.LogError("车道变化模块", ex);
+                _logger.LogError("车道变化模块"+ex.ToString());
             }
         }
 
@@ -192,7 +192,7 @@ namespace CoreSignal.signalr
                         ConnectionID = Context.ConnectionId,
                         IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
                         Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
-                        ClientName = "Winform车道代理" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
+                        ClientName = "Winform监控" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
                         ClientType = "Winform",
                         ConnectionTime = DateTime.Now.ToString()
                     });//添加会话对象
@@ -229,7 +229,7 @@ namespace CoreSignal.signalr
 
 
         public override Task OnDisconnected(bool stopCalled)
-        {
+       {
             try
             {
                 ///判断是否已经存在该条车道
@@ -240,7 +240,7 @@ namespace CoreSignal.signalr
                     messageContextList.Remove(temp);
                     //在就移除 退出
 
-                    _logger.LogWarning("车道监控：{0},与服务断开连接", Context.Request.HttpContext.Connection.RemoteIpAddress);
+                    _logger.LogWarning("车道代理：{0},与服务断开连接", Context.Request.HttpContext.Connection.RemoteIpAddress);
                 }
                 if (sessionObjectList.Count(x => x.ConnectionID == Context.ConnectionId) > 0)
                 {
@@ -250,7 +250,7 @@ namespace CoreSignal.signalr
                     sessionObjectList.Remove(temp);//包含则移除。
 
                 }
-                _logger.LogWarning("{0},与服务断开连接", Context.ConnectionId);
+               
                 F5();
             }
             catch (Exception ex)
