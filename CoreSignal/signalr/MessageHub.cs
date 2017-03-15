@@ -18,7 +18,7 @@ namespace CoreSignal.signalr
         /// 根目录保存日志
         /// </summary>
         //Log log = new Log(AppContext.BaseDirectory);
-
+        
         ///日志记录
         private readonly ILogger<MessageHub> _logger;
 

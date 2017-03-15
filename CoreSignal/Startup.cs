@@ -54,9 +54,14 @@ namespace CoreSignal.SignalR
             services.AddMvc();
             services.AddSignalR(options =>
             {
+                options.Transports.EnabledTransports = Microsoft.AspNetCore.SignalR.TransportType.All;
                 options.Hubs.EnableDetailedErrors = true;
+                options.Transports.DisconnectTimeout = TimeSpan.FromSeconds(6);//超时时间
+                options.Transports.TransportConnectTimeout = TimeSpan.FromSeconds(6);//连接超时时间
+                options.Transports.KeepAlive = TimeSpan.FromSeconds(3);//保持连接的心跳时间
             });
-
+               
+            
 
 
 
@@ -90,7 +95,9 @@ namespace CoreSignal.SignalR
             app.UseStaticFiles();
             app.UseWebSockets();//加入Websocket和SignalR支持
             app.UseSignalR();
-          
+             
+            
+            
 
 
             app.UseMvc(routes =>
@@ -101,5 +108,7 @@ namespace CoreSignal.SignalR
             });
 
         }
+
+        
     }
 }
