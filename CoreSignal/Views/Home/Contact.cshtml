@@ -69,7 +69,7 @@
             </tr>
         </table>
     </div>
-    <div class="span8">
+    @*<div class="span8">
         <table class="table table-bordered" id="LaneStatus-Table">
             <tr>
                 <td>当前状态</td>
@@ -126,7 +126,7 @@
             <td>残损代码</td>
             <td>残损等级</td>           
         </tr>
-    </table>
+    </table>*@
 </div>
 
 
@@ -166,68 +166,68 @@
                     + "</td><td>" + messageContent.LaneStatus //实际为一个LaneStatus对象。
                     + "</tr>"
                 )
-                var LaneStatus = messageContent.LaneStatus;
-                $("#LaneStatus-Table").append(
-                    "<tr><td>" + LaneStatus.LaneType
-                    + "</td><td>" + LaneStatus.StartTime
-                    + "</td><td>" + LaneStatus.EndTime
-                    + "</td><td>" + LaneStatus.TrunkNo
-                    + "</td><td>" + LaneStatus.OcrTruckNo
-                    + "</td><td>" + LaneStatus.RfidTruckNo
-                    + "</td><td>" + LaneStatus.WeightBridge
-                    + "</td><td>" + LaneStatus.Barrier
-                    + "</td><td>" + LaneStatus.IcCardNo
-                    + "</td><td>" + LaneStatus.LaneReady
-                    + "</td><td>" + LaneStatus.HasTruck
-                    + "</td><td>" + LaneStatus.TruckRfid 
-                    + "</td><td>" + LaneStatus.TruckOrc 
-                    + "</td><td>" + LaneStatus.ContainerOcr
-                    + "</td><td>" + LaneStatus.ReadIcCard
-                    + "</td><td>" + LaneStatus.DamageCheck
-                    + "</td><td>" + LaneStatus.SubmitToTos
-                    + "</td><td>" + LaneStatus.ReplyFromTos
-                    + "</td><td>" + LaneStatus.PrintRecipt
-                    + "</td><td>" + LaneStatus.LiftBarrier
-                    + "</td><td>" + LaneStatus.DamageChecks 
-                    + "</td><td>" + LaneStatus.DamageCounts
-                    + "</td><td>" + LaneStatus.TruckPicUrl
-                    + "</td><td>" + LaneStatus.FrontTopPicUrl
-                    + "</td><td>" + LaneStatus.BackTopPicUrl
-                    + "</td><td>" + LaneStatus.LeftFrontPicUrl
-                    + "</td><td>" + LaneStatus.LeftBackPicUrl
-                    + "</td><td>" + LaneStatus.RightFrontPicUrl
-                    + "</td><td>" + LaneStatus.RightBackPicUrl
-                    + "</td><td>" + LaneStatus.LeftDamagePicUrl
-                    + "</td><td>" + LaneStatus.RightDamagePicUrl
-                    + "</td><td>" + LaneStatus.TopDamagePicUrl
-                    + "</td><td>" + LaneStatus.Containers//集装箱对象集合。
-                    + "</tr>"
-                )
-                var Containers = LaneStatus.Containers;//这里是一个对象数组。
-                for (var o= 0; o < Containers.length;o++)
-                {
-                    $("#Containers-Table").append(
-                        "<tr><td>" + Containers[o].Position
-                        + "</td><td>" + Containers[o].ContainerNo
-                        + "</td><td>" + Containers[o].OcrContainerNo
-                        + "</td><td>" + Containers[o].IsoCode
-                        + "</td><td>" + Containers[o].Damage //这里也是一个对象数组
-                        + "</tr>"
-                    )
+                //var LaneStatus = messageContent.LaneStatus;
+                //$("#LaneStatus-Table").append(
+                //    "<tr><td>" + LaneStatus.LaneType
+                //    + "</td><td>" + LaneStatus.StartTime
+                //    + "</td><td>" + LaneStatus.EndTime
+                //    + "</td><td>" + LaneStatus.TrunkNo
+                //    + "</td><td>" + LaneStatus.OcrTruckNo
+                //    + "</td><td>" + LaneStatus.RfidTruckNo
+                //    + "</td><td>" + LaneStatus.WeightBridge
+                //    + "</td><td>" + LaneStatus.Barrier
+                //    + "</td><td>" + LaneStatus.IcCardNo
+                //    + "</td><td>" + LaneStatus.LaneReady
+                //    + "</td><td>" + LaneStatus.HasTruck
+                //    + "</td><td>" + LaneStatus.TruckRfid 
+                //    + "</td><td>" + LaneStatus.TruckOrc 
+                //    + "</td><td>" + LaneStatus.ContainerOcr
+                //    + "</td><td>" + LaneStatus.ReadIcCard
+                //    + "</td><td>" + LaneStatus.DamageCheck
+                //    + "</td><td>" + LaneStatus.SubmitToTos
+                //    + "</td><td>" + LaneStatus.ReplyFromTos
+                //    + "</td><td>" + LaneStatus.PrintRecipt
+                //    + "</td><td>" + LaneStatus.LiftBarrier
+                //    + "</td><td>" + LaneStatus.DamageChecks 
+                //    + "</td><td>" + LaneStatus.DamageCounts
+                //    + "</td><td>" + LaneStatus.TruckPicUrl
+                //    + "</td><td>" + LaneStatus.FrontTopPicUrl
+                //    + "</td><td>" + LaneStatus.BackTopPicUrl
+                //    + "</td><td>" + LaneStatus.LeftFrontPicUrl
+                //    + "</td><td>" + LaneStatus.LeftBackPicUrl
+                //    + "</td><td>" + LaneStatus.RightFrontPicUrl
+                //    + "</td><td>" + LaneStatus.RightBackPicUrl
+                //    + "</td><td>" + LaneStatus.LeftDamagePicUrl
+                //    + "</td><td>" + LaneStatus.RightDamagePicUrl
+                //    + "</td><td>" + LaneStatus.TopDamagePicUrl
+                //    + "</td><td>" + LaneStatus.Containers//集装箱对象集合。
+                //    + "</tr>"
+                //)
+                //var Containers = LaneStatus.Containers;//这里是一个对象数组。
+                //for (var o= 0; o < Containers.length;o++)
+                //{
+                //    $("#Containers-Table").append(
+                //        "<tr><td>" + Containers[o].Position
+                //        + "</td><td>" + Containers[o].ContainerNo
+                //        + "</td><td>" + Containers[o].OcrContainerNo
+                //        + "</td><td>" + Containers[o].IsoCode
+                //        + "</td><td>" + Containers[o].Damage //这里也是一个对象数组
+                //        + "</tr>"
+                //    )
 
-                    var Damage = Containers[o].Damage
-                    for (var p = 0; p < Damage.length; p++)
-                    {
-                        $("#Damage-Table").append(
-                            "<tr><td>" + Damage[p].Side
-                            + "</td><td>" + Damage[p].DamageCode
-                            + "</td><td>" + Damage[p].DamgeGrade
-                            + "</tr>"
-                        )
+                //    var Damage = Containers[o].Damage
+                //    for (var p = 0; p < Damage.length; p++)
+                //    {
+                //        $("#Damage-Table").append(
+                //            "<tr><td>" + Damage[p].Side
+                //            + "</td><td>" + Damage[p].DamageCode
+                //            + "</td><td>" + Damage[p].DamgeGrade
+                //            + "</tr>"
+                //        )
 
-                    }
+                //    }
 
-                }//Containers的For循环。
+                //}//Containers的For循环。
              
 
             }//外部FOR循环
