@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SignalR.Hubs;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,11 +26,29 @@ namespace CoreSignal.signalr
         public MessageHub(ILogger<MessageHub> logger)
         {
             _logger = logger;
+            if(File.Exists("wwwroot/config/MessageStatusObj.txt")&&File.Exists("wwwroot/config/LaneID.txt"))
+            {
+                if (messageDic.Count != 0)
+                {
+                    List<object> valuelist = JsonHelper.DeserializeJsonToList<object>(File.ReadAllText("wwwroot/config/MessageStatusObj.txt"));
+                    List<string> valueKey = JsonHelper.DeserializeJsonToList<string>(File.ReadAllText("wwwroot/config/LaneID.txt"));
+                    for (int i = 0; i < valuelist.Count; i++)
+                    {
+                        messageDic.Add(valueKey[i], valuelist[i]);
+                    }
+                }
+
+            }
         }
+
+
+      
         /// <summary>
         /// 车道信息列表。
         /// </summary>
-        public static List<Pf_MessageStatus_Obj> messageContextList = new List<Pf_MessageStatus_Obj>();
+        public static Dictionary<string, object> messageDic = new Dictionary<string, object>();
+
+        public static List<object> messageContextList = new List<object>();
         /// <summary>
         /// 会话信息列表。
         /// </summary>
@@ -42,7 +61,12 @@ namespace CoreSignal.signalr
         {
             try
             {
-                Clients.All.GetUserList(DataHepler.EncodingMessageStatusList(messageContextList));
+                foreach (var item in messageDic)
+                {
+                    messageContextList.Add(item);//添加到messageContextList中
+
+                }
+                Clients.All.GetUserList(JsonHelper.SerializeObject(messageContextList));
                 Clients.All.GetSessionList(JsonHelper.SerializeObject(sessionObjectList));
             }
             catch (Exception ex)
@@ -76,18 +100,18 @@ namespace CoreSignal.signalr
 
 
         [HubMethodName("修改车道状态信息")]
-        public void ChangeGateMessage(string SendConnectionID, string JsonMessage)
+        public void ChangeGateMessage(string SendConnectionID , string LaneID, string JsonMessage)
         {
             try
             {
-                if (messageContextList.Count(x => x.MessageContent.ConnectionID.ToString() == SendConnectionID) > 0)
+                var temp = JsonHelper.DeserializeJsonToObject<Object>(JsonMessage);
+                if (messageDic.ContainsKey(LaneID))
                 {
-                    Pf_MessageStatus_Obj temp = messageContextList.FirstOrDefault(x => x.MessageContent.ConnectionID.ToString() == SendConnectionID);
-                    temp.MessageContent.LaneStatus = JsonHelper.DeserializeJsonToObject<pf_LaneStatus_Obj>(JsonMessage);
-                    Clients.Client(SendConnectionID).reciveStatus(DataHepler.EncodingMessageStatus(temp));
-                    ///修改后并传递给车道。
-                }
+                    messageDic[LaneID] = temp;
 
+
+                }
+                Clients.Client(SendConnectionID).reciveStatus();
                 F5();///刷新
             }
             catch (Exception ex)
@@ -110,24 +134,17 @@ namespace CoreSignal.signalr
         /// </summary>
         /// <param name="JsonMessage">整个MessageContext对象</param>
         [HubMethodName("车道状态改变")]
-        public void GateBoard(string JsonMessage)
+        public void GateBoard(string LaneID,string JsonGateTheSelf)
         {
             try
             {
-                var temp = DataHepler.DecodingMessageStatus(JsonMessage);
-                temp.MessageContent.ConnectionID = Context.ConnectionId;
-                temp.MessageContent.UpdateTime = DateTime.Now.ToString();
-                lock (messageContextList)
+                var temp = JsonHelper.DeserializeJsonToObject<Object>(JsonGateTheSelf);
+                if (messageDic.ContainsKey(LaneID))
                 {
-                    if (messageContextList.Count(x => x.MessageContent.LaneID == temp.MessageContent.LaneID) > 0)
-                    {
-                        var temptt = messageContextList.FirstOrDefault(x => x.MessageContent.LaneID == temp.MessageContent.LaneID);
-                        messageContextList.Remove(temptt);
-                        messageContextList.Add(temp);//替换
+                    messageDic[LaneID] = temp;
 
-                        F5();//刷新
-                    }
                 }
+
             }
             catch (Exception ex)
             {
@@ -156,35 +173,20 @@ namespace CoreSignal.signalr
                 if (Context.QueryString["Type"] == "Client")//表示车道代理
                 {
 
-
-                    Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
-                    obj.MessageContent = new pf_MessageStatusContext_Obj();
-                    obj.MessageContent.LaneStatus = new pf_LaneStatus_Obj();
-                    obj.MessageContent.ConnectionID = Context.ConnectionId;//保存ID
-                    obj.MessageContent.LaneID = Context.QueryString["ID"];
-                    if (messageContextList.Count(x => x.MessageContent.LaneID == obj.MessageContent.LaneID) > 0)//数据更新
+                    Clients.Caller.StatusCode("已作为车道服务登录");
+                    sessionObjectList.Add(new SessionObj
                     {
-                        var temp = messageContextList.FirstOrDefault(x => x.MessageContent.LaneID == obj.MessageContent.LaneID);
-                        //gateList.Remove(temp);
-                        temp = obj;
-                        // gateList.Add(temp);
-                        
-                    }
-                    else//数据添加
-                    {
-                        messageContextList.Add(obj);
-                        sessionObjectList.Add(new SessionObj
-                        {
-                            ConnectionID = Context.ConnectionId,
-                            IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
-                            Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
-                            ClientName = obj.MessageContent.LaneID,
-                            ClientType = "LaneAgent",
-                            ConnectionTime = DateTime.Now.ToString()
-                        });//添加会话对象
-                        _logger.LogWarning("车道代理{0}连接了", obj.MessageContent.LaneID);
-                    }
+                        ConnectionID = Context.ConnectionId,
+                        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
+                        Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
+                        ClientName = "车道代理" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
+                        ClientType = "Winform",
+                        ConnectionTime = DateTime.Now.ToString()
+                    });//添加会话对象
+                    _logger.LogWarning("车道服务：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
                 }
+            
+            
                 else if (Context.QueryString["Type"] == "Watch")//表示是车道监控
                 {
                     sessionObjectList.Add(new SessionObj
@@ -201,8 +203,6 @@ namespace CoreSignal.signalr
                 }
                 else //表示为浏览器。
                 {
-
-
                     sessionObjectList.Add(new SessionObj
                     {
                         ConnectionID = Context.ConnectionId,
@@ -232,25 +232,28 @@ namespace CoreSignal.signalr
        {
             try
             {
-                ///判断是否已经存在该条车道
-                if (messageContextList.Count(x => x.MessageContent.ConnectionID == Context.ConnectionId) > 0)
+                sessionObjectList.Add(new SessionObj
                 {
-                    var temp = messageContextList.FirstOrDefault(x => x.MessageContent.ConnectionID == Context.ConnectionId);
+                    ConnectionID = Context.ConnectionId,
+                    //IPAddress = Context.,
+                    IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
+                    Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
+                    ClientName = "Broswer" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
+                    ClientType = "Broswer",
+                    ConnectionTime = DateTime.Now.ToString()
 
-                    messageContextList.Remove(temp);
-                    //在就移除 退出
+                });//添加会话对象
+                _logger.LogWarning("浏览器或其他端口：{0},断开了", Context.Request.HttpContext.Connection.RemoteIpAddress);
 
-                    _logger.LogWarning("车道代理：{0},与服务断开连接", Context.Request.HttpContext.Connection.RemoteIpAddress);
-                }
-                if (sessionObjectList.Count(x => x.ConnectionID == Context.ConnectionId) > 0)
+                if(sessionObjectList.Count(x=>x.ConnectionID==Context.ConnectionId)>0)
                 {
-                    var temp = sessionObjectList.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId);
-
-
-                    sessionObjectList.Remove(temp);//包含则移除。
-
+                    sessionObjectList.Remove(sessionObjectList.FirstOrDefault(x => x.ConnectionID == Context.ConnectionId));
                 }
-               
+                ///掉线广播方式
+                Clients.All.BoardExit(Context.ConnectionId);
+
+                 
+
                 F5();
             }
             catch (Exception ex)
@@ -263,22 +266,6 @@ namespace CoreSignal.signalr
             return base.OnDisconnected(stopCalled);
         }
 
-        /// <summary>
-        /// 连接心跳。
-        /// </summary>
-        [HubMethodName("心跳")]
-        public void HeartBeat()
-        {
-            try
-            {
-                Clients.Caller.ListenHeartBeat("True");
-            }
-            catch (Exception ex)
-            {
-                //log.AddErrorText("心跳", ex);
-                _logger.LogError("心跳模块", ex);
-            }
-        }
-
+    
     }
 }
