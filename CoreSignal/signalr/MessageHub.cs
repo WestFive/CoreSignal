@@ -258,7 +258,7 @@ namespace CoreSignal.signalr
 
                    // messageContextList.Remove(temp);
                     //在就移除 退出
-                    temp.MessageContent.ConnectionID = "offline";
+                    temp.MessageContent.ConnectionID = "offline"; 
 
                     _logger.LogWarning("车道代理：{0},与服务断开连接", Context.Request.HttpContext.Connection.RemoteIpAddress);
                 }
