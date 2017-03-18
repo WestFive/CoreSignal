@@ -43,7 +43,7 @@ namespace Data.Model
         /// <summary>
         /// IC卡读卡号
         /// </summary>
-        public int IcCardNo { get; set; }
+        public string IcCardNo { get; set; }
         /// <summary>
         /// 与进度条“车道就绪”关联
         /// </summary>
