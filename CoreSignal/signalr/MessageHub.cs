@@ -50,6 +50,7 @@ namespace CoreSignal.signalr
         {
             try
             {
+                
                 Clients.All.GetUserList(DataHepler.EncodingMessageStatusList(messageContextList));
                 Clients.All.GetSessionList(JsonHelper.SerializeObject(sessionObjectList));
             }
