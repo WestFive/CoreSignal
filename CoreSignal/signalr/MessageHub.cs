@@ -50,7 +50,7 @@ namespace CoreSignal.signalr
         {
             try
             {
-                
+                messageContextList.OrderBy(x => x.MessageContent.LaneID);            
                 Clients.All.GetUserList(DataHepler.EncodingMessageStatusList(messageContextList));
                 Clients.All.GetSessionList(JsonHelper.SerializeObject(sessionObjectList));
             }
@@ -130,9 +130,9 @@ namespace CoreSignal.signalr
                 {
                     if (messageContextList.Count(x => x.MessageContent.LaneID == temp.MessageContent.LaneID) > 0)
                     {
-                        var temptt = messageContextList.FirstOrDefault(x => x.MessageContent.LaneID == temp.MessageContent.LaneID);
-                        messageContextList.Remove(temptt);
-                        messageContextList.Add(temp);//替换
+                        //var temptt = messageContextList.FirstOrDefault(x => x.MessageContent.LaneID == temp.MessageContent.LaneID);
+                        
+                        messageContextList[messageContextList.FindIndex(x => x.MessageContent.LaneID == temp.MessageContent.LaneID)] = temp;
 
                         F5();//刷新
                     }
