@@ -1,6 +1,6 @@
-#Real-time applications using ASP.NET Core, SignalR ,the Client Use .netFramework Winform Build By VisualStudio 2017
+#Real-time applications using ASP.NET Core, SignalR ,the Client Use .netFramework Winform Build By VisualStudio 2017#
 
-##CoreSignl -Server
+##CoreSignl -Server##
 clone and Use it 
 step1 
 restore dotnet 
@@ -32,6 +32,6 @@ to make a client connect the server
 Learn  more about signalr
 !(SignalR)[http://www.tuicool.com/articles/uQV7ziz]
 
-##Client
+##Client##
 !(client)[https://github.com/WestFive/SignlR]
 
