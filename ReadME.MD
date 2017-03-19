@@ -1,4 +1,7 @@
 **Real-time applications using ASP.NET Core, SignalR ,the Client Use .netFramework Winform Build By VisualStudio 2017**————————————————————————
+
+[TestPage](http://http://139.199.225.84/)
+
 *CoreSignl -Server*
 clone and Use it 
 step1 
@@ -33,6 +36,9 @@ Learn  more about signalr
 
 !(SignalR)[http://www.tuicool.com/articles/uQV7ziz]
 ——————————————————<br>
+
+
+
 **Client**
 !(client)[https://github.com/WestFive/SignlR]
 
