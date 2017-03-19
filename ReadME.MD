@@ -1,2 +1,37 @@
-http://hurtdays.com/2017/03/08/Cross/
-winform+ubuntuCore+SignalR实现跨平台数据推送消息中心。
+#Real-time applications using ASP.NET Core, SignalR ,the Client Use .netFramework Winform Build By VisualStudio 2017
+
+##CoreSignl -Server
+clone and Use it 
+step1 
+restore dotnet 
+```
+https://github.com/WestFive/CoreSignal
+cd CoreSignal
+cd CoreSignal
+dotnet restore
+```
+step2
+open Server
+```
+dotnet run 
+```
+or
+```
+dotnet publish 
+cd /bin/Debug/netcoreapp1.0/publish 
+run CoreSignal
+```
+the server is running .
+In fact ,the sever have a simple webclient .
+open the server 
+```
+http://localhost:5000
+```
+to make a client connect the server 
+
+Learn  more about signalr
+!(SignalR)[http://www.tuicool.com/articles/uQV7ziz]
+
+##Client
+!(client)[https://github.com/WestFive/SignlR]
+
