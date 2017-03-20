@@ -27,6 +27,10 @@ namespace CoreSignal.signalr
         {
             _logger = logger;
 
+            Data.MySqlHelper.GetList();
+
+
+
             if (messageContextList.Count == 0)
             {
                 if (File.Exists("wwwroot/config/MessageStatusObj.txt"))
