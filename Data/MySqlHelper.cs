@@ -1,6 +1,7 @@
 ﻿using Data.TheDbContext;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Data
@@ -15,6 +16,9 @@ namespace Data
                 db.SaveChanges();
 
                 User s = db.Find<User>(2);
+                db.SaveChanges();
+
+                List<User> users = db.User.Where(x => x.ID < 10).OrderBy(x => x.ID).ToList();
                 db.SaveChanges();
 
             }

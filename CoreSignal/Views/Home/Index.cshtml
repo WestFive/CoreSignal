@@ -61,6 +61,7 @@
 
     <script type="text/javascript">
 
+        $.connection.hub.qs = "Type=Watch";
         $.connection.hub.start().done(function () {
             alert("连接服务器成功");
         });
