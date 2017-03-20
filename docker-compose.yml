@@ -1,8 +1,0 @@
-version: '2'
-
-services:
-  coresignal:
-    image: coresignal
-    build:
-      context: ./CoreSignal
-      dockerfile: Dockerfile
