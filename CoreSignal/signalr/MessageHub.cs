@@ -27,7 +27,7 @@ namespace CoreSignal.signalr
         {
             _logger = logger;
 
-            //Data.MySqlHelper.GetList();
+            //Data.MySqlHelper.GetList();、、
 
 
 
