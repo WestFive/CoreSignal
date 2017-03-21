@@ -11,25 +11,25 @@ namespace Data.Model
         /// <summary>
         /// 位置
         /// </summary>
-        public string Position { get; set; }
+        public string position { get; set; }
 
         /// <summary>
         /// 集装箱号
         /// </summary>
-        public string ContainerNo { get; set; }
+        public string container_no { get; set; }
         /// <summary>
         /// OCR识别集装箱号
         /// </summary>
-        public string OcrContainerNo { get; set; }
+        public string ocr_container_no { get; set; }
 
         /// <summary>
         /// ISO码
         /// </summary>
-        public string IsoCode { get; set; }
+        public string iso_code { get; set; }
         /// <summary>
         /// 残损信息数组
         /// </summary>
-        public pf_Damage_Struct[] Damage { get;set;}
+        public pf_Damage_Struct[] job_type { get;set;}
         
            
     }

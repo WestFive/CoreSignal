@@ -54,7 +54,7 @@ namespace CoreSignal.signalr
         {
             try
             {
-                messageContextList.OrderBy(x => x.MessageContent.LaneID);            
+                messageContextList.OrderBy(x => x.message_content.lane_id);            
                 Clients.All.GetUserList(DataHepler.EncodingMessageStatusList(messageContextList));
                 Clients.All.GetSessionList(JsonHelper.SerializeObject(sessionObjectList));
             }
@@ -93,10 +93,10 @@ namespace CoreSignal.signalr
         {
             try
             {
-                if (messageContextList.Count(x => x.MessageContent.ConnectionID.ToString() == SendConnectionID) > 0)
+                if (messageContextList.Count(x => x.message_content.connection_id.ToString() == SendConnectionID) > 0)
                 {
-                    Pf_MessageStatus_Obj temp = messageContextList.FirstOrDefault(x => x.MessageContent.ConnectionID.ToString() == SendConnectionID);
-                    temp.MessageContent.LaneStatus = JsonHelper.DeserializeJsonToObject<pf_LaneStatus_Obj>(JsonMessage);
+                    Pf_MessageStatus_Obj temp = messageContextList.FirstOrDefault(x => x.message_content.connection_id.ToString() == SendConnectionID);
+                    temp.message_content.lane_status = JsonHelper.DeserializeJsonToObject<pf_LaneStatus_Obj>(JsonMessage);
                     Clients.Client(SendConnectionID).reciveStatus(DataHepler.EncodingMessageStatus(temp));
                     ///修改后并传递给车道。
                 }
@@ -128,15 +128,15 @@ namespace CoreSignal.signalr
             try
             {
                 var temp = DataHepler.DecodingMessageStatus(JsonMessage);
-                temp.MessageContent.ConnectionID = Context.ConnectionId;
-                temp.MessageContent.UpdateTime = DateTime.Now.ToString();
+                temp.message_content.connection_id = Context.ConnectionId;
+                temp.message_content.update_time = DateTime.Now.ToString();
                 lock (messageContextList)
                 {
-                    if (messageContextList.Count(x => x.MessageContent.LaneID == temp.MessageContent.LaneID) > 0)
+                    if (messageContextList.Count(x => x.message_content.lane_id == temp.message_content.lane_id) > 0)
                     {
-                        //var temptt = messageContextList.FirstOrDefault(x => x.MessageContent.LaneID == temp.MessageContent.LaneID);
+                        //var temptt = messageContextList.FirstOrDefault(x => x.message_content.LaneID == temp.message_content.LaneID);
                         
-                        messageContextList[messageContextList.FindIndex(x => x.MessageContent.LaneID == temp.MessageContent.LaneID)] = temp;
+                        messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == temp.message_content.lane_id)] = temp;
 
                         F5();//刷新
                     }
@@ -170,25 +170,25 @@ namespace CoreSignal.signalr
                 {
 
 
-                    if (messageContextList.Count(x => x.MessageContent.LaneID == Context.QueryString["ID"]) > 0)
+                    if (messageContextList.Count(x => x.message_content.lane_id == Context.QueryString["ID"]) > 0)
                     {
 
-                        var temp = messageContextList.FirstOrDefault(x => x.MessageContent.LaneID == Context.QueryString["ID"]);
+                        var temp = messageContextList.FirstOrDefault(x => x.message_content.lane_id == Context.QueryString["ID"]);
                         
-                            temp.MessageContent.ConnectionID = Context.ConnectionId;
+                            temp.message_content.connection_id = Context.ConnectionId;
 
                          //数据更新
                     }
 
 
                     //Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
-                    //obj.MessageContent = new pf_MessageStatusContext_Obj();
-                    //obj.MessageContent.LaneStatus = new pf_LaneStatus_Obj();
-                    //obj.MessageContent.ConnectionID = Context.ConnectionId;//保存ID
-                    //obj.MessageContent.LaneID = Context.QueryString["ID"];
-                    //if (messageContextList.Count(x => x.MessageContent.LaneID == obj.MessageContent.LaneID) > 0)//数据更新
+                    //obj.message_content = new pf_MessageStatusContext_Obj();
+                    //obj.message_content.LaneStatus = new pf_LaneStatus_Obj();
+                    //obj.message_content.ConnectionID = Context.ConnectionId;//保存ID
+                    //obj.message_content.LaneID = Context.QueryString["ID"];
+                    //if (messageContextList.Count(x => x.message_content.LaneID == obj.message_content.LaneID) > 0)//数据更新
                     //{
-                    //    var temp = messageContextList.FirstOrDefault(x => x.MessageContent.LaneID == obj.MessageContent.LaneID);
+                    //    var temp = messageContextList.FirstOrDefault(x => x.message_content.LaneID == obj.message_content.LaneID);
                     //    //gateList.Remove(temp);
                     //    temp = obj;
                     //    // gateList.Add(temp);
@@ -202,7 +202,7 @@ namespace CoreSignal.signalr
                     //        ConnectionID = Context.ConnectionId,
                     //        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
                     //        Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
-                    //        ClientName = obj.MessageContent.LaneID,
+                    //        ClientName = obj.message_content.LaneID,
                     //        ClientType = "LaneAgent",
                     //        ConnectionTime = DateTime.Now.ToString()
                     //    });//添加会话对象
@@ -257,13 +257,13 @@ namespace CoreSignal.signalr
             try
             {
                 ///判断是否已经存在该条车道
-                if (messageContextList.Count(x => x.MessageContent.ConnectionID == Context.ConnectionId) > 0)
+                if (messageContextList.Count(x => x.message_content.connection_id == Context.ConnectionId) > 0)
                 {
-                    var temp = messageContextList.FirstOrDefault(x => x.MessageContent.ConnectionID == Context.ConnectionId);
+                    var temp = messageContextList.FirstOrDefault(x => x.message_content.connection_id == Context.ConnectionId);
 
                    // messageContextList.Remove(temp);
                     //在就移除 退出
-                    temp.MessageContent.ConnectionID = "offline"; 
+                    temp.message_content.connection_id = "offline"; 
 
                     _logger.LogWarning("车道代理：{0},与服务断开连接", Context.Request.HttpContext.Connection.RemoteIpAddress);
                 }
