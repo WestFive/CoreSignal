@@ -26,10 +26,15 @@ namespace Data.Model
         /// ISO码
         /// </summary>
         public string iso_code { get; set; }
+
+        /// <summary>
+        /// 作业类型内容
+        /// </summary>
+        public string job_type { get; set; }
         /// <summary>
         /// 残损信息数组
         /// </summary>
-        public pf_Damage_Struct[] job_type { get;set;}
+        public pf_Damage_Struct[] damages { get;set;}
         
            
     }

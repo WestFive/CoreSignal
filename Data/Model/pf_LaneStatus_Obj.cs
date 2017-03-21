@@ -71,6 +71,11 @@ namespace Data.Model
         /// 车头图片URL
         /// </summary>
         public  string truck_pic_url { get; set; }
+
+        /// <summary>
+        /// 车牌图片URL
+        /// </summary>
+        public string truck_crop_pic_url { get; set; }
         /// <summary>
         /// 前顶图片URL
         /// </summary>
