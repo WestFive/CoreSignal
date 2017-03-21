@@ -11,39 +11,39 @@ namespace Data.Model
         /// <summary>
         /// 车道ID
         /// </summary>
-        public string LaneID { get;  set; }
+        public string lane_id { get;  set; }
         /// <summary>
         /// 地区编号
         /// </summary>
-        public string CountryCode { get;  set; }
+        public string country_code { get;  set; }
         /// <summary>
         /// 区域编号
         /// </summary>
-        public string CityCode { get;  set; }
+        public string city_code { get;  set; }
         /// <summary>
         /// 场站编号
         /// </summary>
-        public string TerminalCode { get; set; }
+        public string terminal_code { get; set; }
         /// <summary>
         /// 车道号
         /// </summary>
-        public string LaneName { get;  set; }
+        public string lane_name { get;  set; }
         /// <summary>
         /// 车道类型
         /// </summary>
-        public string Direction { get; set; }
+        public string direction { get; set; }
         /// <summary>
         /// 连接ID
         /// </summary>
-        public string ConnectionID { get; set; }
+        public string connection_id { get; set; }
         /// <summary>
         /// 更新时间
         /// </summary>
-        public string UpdateTime { get; set; }
+        public string update_time { get; set; }
         /// <summary>
         ///  车道状态（对象）
         /// </summary>
-        public pf_LaneStatus_Obj LaneStatus { get; set; }
+        public pf_LaneStatus_Obj lane_status { get; set; }
 
 
 

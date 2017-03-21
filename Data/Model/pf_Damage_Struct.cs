@@ -11,16 +11,16 @@ namespace Data.Model
         /// <summary>
         /// 残损面
         /// </summary>
-        public string Side { get; set; }
+        public string side { get; set; }
 
         /// <summary>
         /// 残损代码
         /// </summary>
-        public string DamageCode { get; set; }
+        public string damage_code { get; set; }
 
         /// <summary>
         /// 残损等级
         /// </summary>
-        public string DamgeGrade { get; set; }
+        public string damage_grade { get; set; }
     }
 }

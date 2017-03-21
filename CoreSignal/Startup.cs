@@ -13,6 +13,7 @@ using NLog.Extensions.Logging;
 using System.Text;
 using NLog.Web;
 using System.IO;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace CoreSignal.SignalR
 {
@@ -60,8 +61,12 @@ namespace CoreSignal.SignalR
                 options.Transports.TransportConnectTimeout = TimeSpan.FromSeconds(6);//连接超时时间
                 //options.Transports.KeepAlive = TimeSpan.FromSeconds(3);//保持连接的心跳时间
             });
-               
-            
+
+
+            services.AddSwaggerGen(a =>
+            {
+                a.SwaggerDoc("v1", new Info { Title = "DemoAPI", Version = "v1" });
+            });
 
 
 
@@ -107,6 +112,13 @@ namespace CoreSignal.SignalR
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
+            app.UseMvcWithDefaultRoute();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "DemoAPI V1");
+            });
         }
 
         
