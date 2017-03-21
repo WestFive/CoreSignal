@@ -15,11 +15,11 @@ namespace Data.Model
         /// <summary>
         /// 消息类型 指令或状态
         /// </summary>
-        public readonly string MessageType = "Status";   
+        public readonly string message_type = "status";   
         /// <summary>
         /// 消息内容
         /// </summary>
-        public pf_MessageStatusContext_Obj MessageContent { get; set; }
+        public pf_MessageStatusContext_Obj message_content { get; set; }
 
     }
 }

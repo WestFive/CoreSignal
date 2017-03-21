@@ -1,4 +1,4 @@
-**Real-time applications using ASP.NET Core, SignalR ,the Client Use .netFramework Winform Build By VisualStudio 2017**————————————————————————
+﻿**Real-time applications using ASP.NET Core, SignalR ,the Client Use .netFramework Winform Build By VisualStudio 2017**————————————————————————
 
 [TestPage](http://http://139.199.225.84/)
 
@@ -36,6 +36,13 @@ Learn  more about signalr
 
 !(SignalR)[http://www.tuicool.com/articles/uQV7ziz]
 ——————————————————<br>
+
+```
+http://localhost:5000/swagger 
+```
+to open the swagger api ui  
+
+then  api tobe connitued.
 
 
 
