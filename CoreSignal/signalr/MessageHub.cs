@@ -184,74 +184,75 @@ namespace CoreSignal.signalr
 
                         //数据更新
                     }
-
-                    #region 调试赋值的方法
-
-                    //    Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
-                    //    obj.message_content = new pf_MessageStatusContext_Obj();
-                    //    obj.message_content.lane_status = new pf_LaneStatus_Obj();
-                    //    obj.message_content.lane_id = Context.ConnectionId;//保存ID
-                    //    obj.message_content.lane_id = Context.QueryString["ID"];
-                    //    if (messageContextList.Count(x => x.message_content.lane_id == obj.message_content.lane_id) > 0)//数据更新
-                    //    {
-                    //        var temp = messageContextList.FirstOrDefault(x => x.message_content.lane_id == obj.message_content.lane_id);
-                    //        //gateList.Remove(temp);
-                    //        temp = obj;
-                    //        // gateList.Add(temp);
-
-                    //    }
-                    //    else//数据添加
-                    //    {
-                    //        messageContextList.Add(obj);
-                    //        sessionObjectList.Add(new SessionObj
-                    //        {
-                    //            ConnectionID = Context.ConnectionId,
-                    //            IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
-                    //            Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
-                    //            ClientName = obj.message_content.lane_id,
-                    //            ClientType = "LaneAgent",
-                    //            ConnectionTime = DateTime.Now.ToString()
-                    //        });//添加会话对象
-
-                    //        _logger.LogWarning("车道代理{0}连接了", Context.QueryString["ID"]);
-                    //    }
-                    //}//预留赋值的方法
-                    //}
-                    #endregion
-
-                    else if (Context.QueryString["Type"] == "Watch")//表示是车道监控
+                    sessionObjectList.Add(new SessionObj
                     {
-                        sessionObjectList.Add(new SessionObj
-                        {
-                            ConnectionID = Context.ConnectionId,
-                            IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
-                            Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
-                            ClientName = "Winform监控" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
-                            ClientType = "Winform",
-                            ConnectionTime = DateTime.Now.ToString()
-                        });//添加会话对象
+                        ConnectionID = Context.ConnectionId,
+                        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
+                        Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
+                        ClientName = Context.QueryString["ID"],
+                        ClientType = "LaneAgent",
+                        ConnectionTime = DateTime.Now.ToString()
+                    });//添加会话对象
 
-                        _logger.LogWarning("车道监控：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
-                    }
-                    else //表示为浏览器。
-                    {
-
-
-                        sessionObjectList.Add(new SessionObj
-                        {
-                            ConnectionID = Context.ConnectionId,
-                            //IPAddress = Context.,
-                            IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
-                            Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
-                            ClientName = "Broswer" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
-                            ClientType = "Broswer",
-                            ConnectionTime = DateTime.Now.ToString()
-
-                        });//添加会话对象
-                        _logger.LogWarning("浏览器或其他端口：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
-                    }
-                    F5();//刷新
+                    _logger.LogWarning("车道代理{0}连接了", Context.QueryString["ID"]);
                 }
+                #region 调试赋值的方法
+
+                //    Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
+                //    obj.message_content = new pf_MessageStatusContext_Obj();
+                //    obj.message_content.lane_status = new pf_LaneStatus_Obj();
+                //    obj.message_content.lane_id = Context.ConnectionId;//保存ID
+                //    obj.message_content.lane_id = Context.QueryString["ID"];
+                //    if (messageContextList.Count(x => x.message_content.lane_id == obj.message_content.lane_id) > 0)//数据更新
+                //    {
+                //        var temp = messageContextList.FirstOrDefault(x => x.message_content.lane_id == obj.message_content.lane_id);
+                //        //gateList.Remove(temp);
+                //        temp = obj;
+                //        // gateList.Add(temp);
+
+                //    }
+                //    else//数据添加
+                //    {
+                //        messageContextList.Add(obj);
+
+
+
+
+                #endregion
+
+                else if (Context.QueryString["Type"] == "Watch")//表示是车道监控
+                {
+                    sessionObjectList.Add(new SessionObj
+                    {
+                        ConnectionID = Context.ConnectionId,
+                        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
+                        Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
+                        ClientName = "Winform监控" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
+                        ClientType = "Winform",
+                        ConnectionTime = DateTime.Now.ToString()
+                    });//添加会话对象
+
+                    _logger.LogWarning("车道监控：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
+                }
+                else //表示为浏览器。
+                {
+
+
+                    sessionObjectList.Add(new SessionObj
+                    {
+                        ConnectionID = Context.ConnectionId,
+                        //IPAddress = Context.,
+                        IPAddress = Context.Request.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(),
+                        Port = Context.Request.HttpContext.Connection.RemotePort.ToString(),
+                        ClientName = "Broswer" + Context.Request.HttpContext.Connection.RemotePort.ToString(),//车道代理+名字=ClientName
+                        ClientType = "Broswer",
+                        ConnectionTime = DateTime.Now.ToString()
+
+                    });//添加会话对象
+                    _logger.LogWarning("浏览器或其他端口：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
+                }
+                    F5();//刷新
+                
             }
             catch (Exception ex)
             {
