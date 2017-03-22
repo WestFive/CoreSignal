@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CoreSignal.signalr;
 using Data.Common;
+using Data.Model;
 
 namespace CoreSiganl.Controllers
 {
@@ -13,9 +14,11 @@ namespace CoreSiganl.Controllers
     {
         // GET api/Clients
         [HttpGet]
-        public string Get()
+        public List<Pf_MessageStatus_Obj> Get()
         {
-            return JsonHelper.SerializeObject(MessageHub.messageContextList);
+            //return JsonHelper.SerializeObject(MessageHub.messageContextList);
+            var value = MessageHub.messageContextList;
+            return value;
         }
 
         // GET api/sessions/idindex

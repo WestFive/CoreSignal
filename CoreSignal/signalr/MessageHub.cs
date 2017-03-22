@@ -60,7 +60,7 @@ namespace CoreSignal.signalr
             try
             {
                 messageContextList.OrderBy(x => x.message_content.lane_id);
-                Clients.All.GetUserList(DataHepler.EncodingMessageStatusList(messageContextList));
+                Clients.All.GetUserList(JsonHelper.SerializeObject(messageContextList));
                 Clients.All.GetSessionList(JsonHelper.SerializeObject(sessionObjectList));
             }
             catch (Exception ex)

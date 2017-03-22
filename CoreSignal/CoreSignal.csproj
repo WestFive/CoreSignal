@@ -17,6 +17,7 @@
     <PackageReference Include="dotnet-command" Version="1.0.0-preview2" />
     <PackageReference Include="Gray.Microsoft.AspNetCore.SignalR.Messaging" Version="0.2.0" />
     <PackageReference Include="Gray.Microsoft.AspNetCore.SignalR.Server" Version="0.2.0-alpha1" />
+    <PackageReference Include="Grpc" Version="1.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="1.1.1" />
