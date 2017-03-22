@@ -115,6 +115,10 @@ namespace CoreSignal.SignalR
             app.UseMvcWithDefaultRoute();
 
             app.UseSwagger();
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DemoAPI V1");
+            //});
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "DemoAPI V1");

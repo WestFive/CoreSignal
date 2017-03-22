@@ -20,6 +20,7 @@ namespace CoreSignal.Controllers
             return Loger.ReadFromLogTxt(DateTime.Now, 0);
         }
 
+        [HttpGet("{days}")]
         public IEnumerable<string> Get(int days)
         {
             Loger.FilePath = "wwwroot/Log";
