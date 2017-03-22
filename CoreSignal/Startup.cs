@@ -65,7 +65,16 @@ namespace CoreSignal.SignalR
 
             services.AddSwaggerGen(a =>
             {
-                a.SwaggerDoc("v1", new Info { Title = "DemoAPI", Version = "v1" });
+                a.SwaggerDoc("v1", new Info
+                {
+                    Title = "SignalrAPI",
+                    Version = "v1",
+                    Description ="为MessageHubs消息服务提供API接口调用",
+                    TermsOfService ="PFKJ",
+                    Contact = new Contact { Name="LeeSinRyuu_PFKJ"},
+                  
+                });
+
             });
 
 
@@ -121,7 +130,8 @@ namespace CoreSignal.SignalR
             //});
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "DemoAPI V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SignalrAPI V1");
+               
             });
         }
 
