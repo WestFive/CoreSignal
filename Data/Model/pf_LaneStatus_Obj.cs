@@ -11,7 +11,7 @@ namespace Data.Model
         /// <summary>
         /// 锁定状态
         /// </summary>
-        public bool lock_status { get; set; } 
+        public bool lock_status { get; set; }
         /// <summary>
         /// 操作人
         /// </summary>
@@ -27,7 +27,7 @@ namespace Data.Model
         /// <summary>
         /// 作业开始时间
         /// </summary>
-        public DateTime start_time{ get; set; } 
+        public DateTime start_time { get; set; }
         /// <summary>
         /// 作业结束时间 指放行时间
         /// </summary>
@@ -58,19 +58,23 @@ namespace Data.Model
         public string ic_card_no { get; set; }
 
 
-        public pf_ProgressBar_Obj progress_bar;
+        public pf_ProgressBar_Obj progress_bar { get; set; }
+        ///// <summary>
+        ///// 进度状态 
+        ///// </summary>
+        //public string[] progress_bar { get; set; }
         /// <summary>
         /// 验残次数
         /// </summary>
-        public int damage_checks { get; set; } 
+        public int damage_checks { get; set; }
         /// <summary>
         /// 残损记录数
         /// </summary>
-        public int damage_counts { get; set;}
+        public int damage_counts { get; set; }
         /// <summary>
         /// 车头图片URL
         /// </summary>
-        public  string truck_pic_url { get; set; }
+        public string truck_pic_url { get; set; }
 
         /// <summary>
         /// 车牌图片URL
@@ -103,7 +107,7 @@ namespace Data.Model
         /// <summary>
         /// 左面箱体拼接图片URL
         /// </summary>
-         public string left_damage_pic_url { get; set; }
+        public string left_damage_pic_url { get; set; }
         /// <summary>
         /// 右面箱体拼接图片URL
         /// </summary>
@@ -112,8 +116,8 @@ namespace Data.Model
         /// 顶面箱体拼接图片URL
         /// </summary>
         public string top_damage_pic_url { get; set; }
-        
-        public  pf_Containers_Struct [] containers { get; set; }
+
+        public pf_Containers_Struct[] containers { get; set; }
 
 
 

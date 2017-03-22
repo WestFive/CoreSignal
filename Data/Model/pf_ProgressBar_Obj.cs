@@ -11,6 +11,12 @@ namespace Data.Model
         /// 与进度条“车道就绪”关联
         /// </summary>
         public bool lane_ready { get; set; }
+        //public string lane_ready_value
+        //{
+        //    get { return lane_ready == true ? "lane_ready" : "null"; }
+        //    set { lane_ready_value = value; }
+            
+        //}
         /// <summary>
         /// 与进度条“感应来车”关联，以及车斗图标关联
         /// </summary>

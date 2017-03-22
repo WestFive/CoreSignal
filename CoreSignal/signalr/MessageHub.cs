@@ -23,10 +23,11 @@ namespace CoreSignal.signalr
         ///日志记录
         private readonly ILogger<MessageHub> _logger;
 
+      
         public MessageHub(ILogger<MessageHub> logger)
         {
             _logger = logger;
-
+            Loger.FilePath = "wwwroot/Log";
             //Data.MySqlHelper.GetList();、、
 
 
@@ -195,6 +196,7 @@ namespace CoreSignal.signalr
                     });//添加会话对象
 
                     _logger.LogWarning("车道代理{0}连接了", Context.QueryString["ID"]);
+                    Loger.AddLogText("车道代理+:"+Context.QueryString["ID"]+"连接了");
                 }
                 #region 调试赋值的方法
 
@@ -233,6 +235,7 @@ namespace CoreSignal.signalr
                     });//添加会话对象
 
                     _logger.LogWarning("车道监控：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
+                    Loger.AddLogText("车道监控+:" + Context.Request.HttpContext.Connection.RemoteIpAddress + "连接了");
                 }
                 else //表示为浏览器。
                 {
@@ -250,6 +253,7 @@ namespace CoreSignal.signalr
 
                     });//添加会话对象
                     _logger.LogWarning("浏览器或其他端口：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
+                    Loger.AddLogText("浏览器或其他端口：" + Context.Request.HttpContext.Connection.RemoteIpAddress + "连接了");
                 }
                     F5();//刷新
                 
