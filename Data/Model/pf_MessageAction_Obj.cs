@@ -8,8 +8,8 @@ namespace Data.Model
 {
    public class pf_MessageAction_Obj
     {
-        public readonly string MessageType = "Action";
+        public readonly string message_type = "Action";
 
-        public pf_MessageActionContext_Obj MessageContext;
+        public pf_MessageActionContext_Obj message_context;
     }
 }

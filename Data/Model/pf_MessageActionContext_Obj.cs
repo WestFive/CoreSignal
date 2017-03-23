@@ -8,12 +8,12 @@ namespace Data.Model
 {
     public class pf_MessageActionContext_Obj
     {
-        public string LaneId { get; set; }
-        public string ConnectionID { get; set; }
+        public string lane_id{ get; set; }
+        public string connection_id { get; set; }
 
-        public DateTime SendTime { get; set; }
+        public DateTime send_time { get; set; }
 
-        public string ActionCode { get; set; }
+        public string action_code { get; set; }
 
 
     }

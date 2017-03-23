@@ -13,13 +13,41 @@ using System.Threading.Tasks;
 namespace CoreSignal.signalr
 {
 
+    /*
+     * 调用说明：
+     * 车道监控： 获取车道状态列表：hub.On("GetStatusList",(data)=>{  处理data });
+     *            获取在线会话列表：Hub.On("GetSessionList",(data)=>{处理data});
+     *            修改车道 hub.Invoke("ChangeStatus","车道ID","修改后的JSON内容");
+     *            刷新 hub.Invoke("F5");
+     *            角色注册：创建connection连接的时候加入QS键值
+     *            1. Dictionary<string, string> dic = new Dictionary<string, string>();
+     *            2. dic.Add("Type", "Watch");
+     *            3. connection = new HubConnection(服务地址,dic);
+     *            
+     * 车道代理:  监听获取最新状态（他人更新） hub.On("reciveStatus",(data)=>{  处理DATA });
+     *            监听获取指令                 hub.On("reciveAction",(data)=>{ 处理DATA});
+     *            修改车道 hub.Invoke("ChangeStatus","车道ID"，"修改后的JSON内容");
+     *            角色注册：创建connection连接的时候加入QS键值
+     *            1. Dictionary<string, string> dic = new Dictionary<string, string>();
+     *            2. dic.Add("Type", "Client");
+     *            3. connection = new HubConnection(服务地址,dic);
+     *                     
+     * Web客户端：获取在线会话列表： proxy.client.GetSessionList = function(datas){ 处理datas}; 
+     *            获取车道状态列表： proxy.client.GetStatusList = function(datas){处理datas};
+     *                            或者：Get请求  url/api/lane_cache 
+     *            修改车道：         Post请求 url/api/lane_cache/{lane_name} //qs参数为: 修改后车道状态的JSON表示
+     *            角色注册： 在 $.connection.messageHub 之前：
+     *                       $.connection.hub.qs ="Type ={类型}";
+     *                       例如 注册 Client 
+     *                       $.connection.hub.qs="Type = Client";
+     *                       注册Watch
+     *                       $.connection.hub.qs = "Type = Watch";
+     *                       默认不注册。
+     *            
+     */
     public class MessageHub : Hub
     {
-        /// <summary>
-        /// 根目录保存日志
-        /// </summary>
-        //Log log = new Log(AppContext.BaseDirectory);
-
+        #region 日志及初始化
         ///日志记录
         private readonly ILogger<MessageHub> _logger;
 
@@ -43,15 +71,24 @@ namespace CoreSignal.signalr
             //    File.WriteAllText("wwwroot/config/MessageStatusObj.txt", JsonHelper.SerializeObject(messageContextList));
             //}//预留赋值的方法
         }
+        #endregion
+        #region 全局变量
+        /// <summary>
+        /// 消息信息列表。
+        /// </summary>
+        public static List<Pf_MessageStatus_Obj> messageContextList = new List<Pf_MessageStatus_Obj>();
+
         /// <summary>
         /// 车道信息列表。
         /// </summary>
-        public static List<Pf_MessageStatus_Obj> messageContextList = new List<Pf_MessageStatus_Obj>();
+        public static List<pf_MessageStatusContext_Obj> messageStatusContentList = new List<pf_MessageStatusContext_Obj>();
         /// <summary>
         /// 会话信息列表。
         /// </summary>
         public static List<SessionObj> sessionObjectList = new List<SessionObj>();
 
+        #endregion
+        #region 刷新
         /// <summary>
         /// 刷新列表并推送至所有已连接上的车道客户端。
         /// </summary>
@@ -59,8 +96,15 @@ namespace CoreSignal.signalr
         {
             try
             {
+                messageStatusContentList.Clear();
+                foreach (var item in messageContextList)
+                {
+                    messageStatusContentList.Add(item.message_content);
+                }
+
                 messageContextList.OrderBy(x => x.message_content.lane_id);
-                Clients.All.GetUserList(JsonHelper.SerializeObject(messageContextList));
+                //Clients.All.GetUserList(JsonHelper.SerializeObject(messageContextList));
+                Clients.All.GetStatusList(JsonHelper.SerializeObject(messageStatusContentList));
                 Clients.All.GetSessionList(JsonHelper.SerializeObject(sessionObjectList));
             }
             catch (Exception ex)
@@ -70,9 +114,75 @@ namespace CoreSignal.signalr
 
             }
         }
+        #endregion
+        #region 发送消息
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        /// <param name="laneID"></param>
+        /// <param name="JsonMessage"></param>
+        [HubMethodName("ChangeStatus")]
+        public void LaneStatusChange(string laneID, string JsonMessage)
+        {
+            var obj = DataHepler.Decoding(JsonMessage);
+            if (obj is pf_MessageAction_Obj)//消息指令
+            {
+                try
+                {
+                    pf_MessageAction_Obj actionobj = (pf_MessageAction_Obj)obj;
+                    if (actionobj.message_context.connection_id != "")
+                    {
+                        Clients.Client(actionobj.message_context.connection_id).reciveAction(JsonHelper.SerializeObject(actionobj));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Loger.AddErrorText("更新消息指令失败", ex);
+                }
 
-       
 
+
+            }
+            else if (obj is Pf_MessageStatus_Obj)//消息状态。
+            {
+                try
+                {
+                    Pf_MessageStatus_Obj statusObj = (Pf_MessageStatus_Obj)obj;
+
+
+                    if (messageContextList.Count(x => x.message_content.lane_id.ToString() == laneID) > 0)
+                    {
+
+                        lock (messageContextList)
+                        {
+                            if (messageContextList.Count(x => x.message_content.lane_id == statusObj.message_content.lane_id) > 0)
+                            {
+
+                                messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == statusObj.message_content.lane_id)].message_content = statusObj.message_content;
+                                if (statusObj.message_content.connection_id != "")
+                                {
+                                    //如果有这个客户端就推送给这个客户端
+                                    Clients.Client(statusObj.message_content.connection_id).reciveStatus(JsonHelper.SerializeObject(statusObj));
+
+                                }
+
+                                F5();//刷新
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Loger.AddErrorText("更新状态失败", ex);
+                }
+
+
+            }
+
+
+        }
+        #endregion
+        #region 会话列表
 
         /// <summary>
         /// 刷新推送获取会话列表。
@@ -91,92 +201,8 @@ namespace CoreSignal.signalr
             }
         }
 
-
-
-
-        [HubMethodName("修改车道状态信息")]
-        public void ChangeGateMessage(string SendConnectionID, string JsonMessage)
-        {
-            try
-            {
-                if (messageContextList.Count(x => x.message_content.connection_id.ToString() == SendConnectionID) > 0)
-                {
-                    var temp = JsonHelper.DeserializeJsonToObject<Pf_MessageStatus_Obj>(JsonMessage);
-                    ///修改后并传递给车道。
-                    lock (messageContextList)
-                    {
-                        if (messageContextList.Count(x => x.message_content.lane_id == temp.message_content.lane_id) > 0)
-                        {
-                            //var temptt = messageContextList.FirstOrDefault(x => x.message_content.LaneID == temp.message_content.LaneID);
-
-                            messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == temp.message_content.lane_id)] = temp;
-
-                            Clients.Client(SendConnectionID).reciveStatus(DataHepler.EncodingMessageStatus(temp));
-                        }
-                    }
-                }
-
-                F5();///刷新
-            }
-            catch (Exception ex)
-            {
-                //log.AddErrorText("修改车道信息", ex);
-                _logger.LogError("监控修改车道信息变化模块" + ex.ToString());
-
-            }
-        }
-
-        [HubMethodName("发送指令")]
-        public void Action(string SendConnectionID, string jsonMessage)
-        {
-            Clients.Client(SendConnectionID).reciveAction(jsonMessage);
-
-        }
-
-        /// <summary>
-        /// 车道变化
-        /// </summary>
-        /// <param name="JsonMessage">整个MessageContext对象</param>
-        [HubMethodName("车道状态改变")]
-        public void GateBoard(string JsonMessage)
-        {
-            try
-            {
-                var temp = DataHepler.DecodingMessageStatus(JsonMessage);
-                temp.message_content.connection_id = Context.ConnectionId;
-                temp.message_content.update_time = DateTime.Now.ToString();
-                lock (messageContextList)
-                {
-                    if (messageContextList.Count(x => x.message_content.lane_id == temp.message_content.lane_id) > 0)
-                    {
-                        //var temptt = messageContextList.FirstOrDefault(x => x.message_content.LaneID == temp.message_content.LaneID);
-
-                        messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == temp.message_content.lane_id)] = temp;
-
-                        F5();//刷新
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //log.AddErrorText("客户端变化", ex);
-                _logger.LogError("车道变化模块" + ex.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 发送通常点对点消息
-        /// </summary>
-        /// <param name="SendConnctionID"></param>
-        /// <param name="Message"></param>
-        [HubMethodName("发送点对点消息")]
-        public void NormalP2P(string SendConnctionID, string Message)
-        {
-            Clients.Client(SendConnctionID).Normal(Message);
-
-        }
-
-
+        #endregion
+        #region 连接事件
         public override Task OnConnected()
         {
             try
@@ -205,7 +231,7 @@ namespace CoreSignal.signalr
                     });//添加会话对象
 
                     _logger.LogWarning("车道代理{0}连接了", Context.QueryString["ID"]);
-                    Loger.AddLogText(DateTime.Now.ToString()+"车道代理+:"+Context.QueryString["ID"]+"连接了");
+                    Loger.AddLogText(DateTime.Now.ToString() + "车道代理+:" + Context.QueryString["ID"] + "连接了");
                 }
                 #region 调试赋值的方法
 
@@ -264,8 +290,8 @@ namespace CoreSignal.signalr
                     _logger.LogWarning("浏览器或其他端口：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
                     Loger.AddLogText(DateTime.Now.ToString() + "浏览器或其他端口：" + Context.Request.HttpContext.Connection.RemoteIpAddress + "连接了");
                 }
-                    F5();//刷新
-                
+                F5();//刷新
+
             }
             catch (Exception ex)
             {
@@ -276,7 +302,8 @@ namespace CoreSignal.signalr
             return base.OnConnected();
         }
 
-
+        #endregion
+        #region 断开连接事件
         public override Task OnDisconnected(bool stopCalled)
         {
             try
@@ -313,23 +340,101 @@ namespace CoreSignal.signalr
             //addTolog("断开服务器");
             return base.OnDisconnected(stopCalled);
         }
+        #endregion
 
-        /// <summary>
-        /// 连接心跳。
-        /// </summary>
-        [HubMethodName("心跳")]
-        public void HeartBeat()
-        {
-            try
-            {
-                Clients.Caller.ListenHeartBeat("True");
-            }
-            catch (Exception ex)
-            {
-                //log.AddErrorText("心跳", ex);
-                _logger.LogError("心跳模块", ex);
-            }
-        }
+
+        /*以下为冗余老代码
+         */
+
+        #region OLD
+
+
+        //[HubMethodName("修改车道状态信息")]
+        //public void ChangeGateMessage(string SendConnectionID, string JsonMessage)
+        //{
+        //    try
+        //    {
+        //        if (messageContextList.Count(x => x.message_content.connection_id.ToString() == SendConnectionID) > 0)
+        //        {
+        //            var temp = JsonHelper.DeserializeJsonToObject<Pf_MessageStatus_Obj>(JsonMessage);
+        //            ///修改后并传递给车道。
+        //            lock (messageContextList)
+        //            {
+        //                if (messageContextList.Count(x => x.message_content.lane_id == temp.message_content.lane_id) > 0)
+        //                {
+        //                    //var temptt = messageContextList.FirstOrDefault(x => x.message_content.LaneID == temp.message_content.LaneID);
+
+        //                    messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == temp.message_content.lane_id)] = temp;
+
+        //                    Clients.Client(SendConnectionID).reciveStatus(JsonHelper.SerializeObject(temp));
+        //                }
+        //            }
+        //        }
+
+        //        F5();///刷新
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //log.AddErrorText("修改车道信息", ex);
+        //        _logger.LogError("监控修改车道信息变化模块" + ex.ToString());
+
+        //    }
+        //}
+
+        //[HubMethodName("发送指令")]
+        //public void Action(string SendConnectionID, string jsonMessage)
+        //{
+        //    Clients.Client(SendConnectionID).reciveAction(jsonMessage);
+
+        //}
+
+        ///// <summary>
+        ///// 车道变化
+        ///// </summary>
+        ///// <param name="JsonMessage">整个MessageContext对象</param>
+        //[HubMethodName("车道状态改变")]
+        //public void GateBoard(string JsonMessage)
+        //{
+        //    try
+        //    {
+        //        var temp = JsonHelper.DeserializeJsonToObject<Pf_MessageStatus_Obj>(JsonMessage);
+        //        temp.message_content.connection_id = Context.ConnectionId;
+        //        temp.message_content.update_time = DateTime.Now.ToString();
+        //        lock (messageContextList)
+        //        {
+        //            if (messageContextList.Count(x => x.message_content.lane_id == temp.message_content.lane_id) > 0)
+        //            {
+        //                //var temptt = messageContextList.FirstOrDefault(x => x.message_content.LaneID == temp.message_content.LaneID);
+
+        //                messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == temp.message_content.lane_id)] = temp;
+
+        //                F5();//刷新
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //log.AddErrorText("客户端变化", ex);
+        //        _logger.LogError("车道变化模块" + ex.ToString());
+        //    }
+        //}
+
+        ///// <summary>
+        ///// 发送通常点对点消息
+        ///// </summary>
+        ///// <param name="SendConnctionID"></param>
+        ///// <param name="Message"></param>
+        //[HubMethodName("发送点对点消息")]
+        //public void NormalP2P(string SendConnctionID, string Message)
+        //{
+        //    Clients.Client(SendConnctionID).Normal(Message);
+
+        //}
+
+        #endregion
+
+
+
 
     }
 }
