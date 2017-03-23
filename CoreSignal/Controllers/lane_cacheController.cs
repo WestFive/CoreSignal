@@ -10,7 +10,7 @@ using Data.Model;
 namespace CoreSiganl.Controllers
 {
     [Route("api/[controller]")]
-    public class ClientsController : Controller
+    public class lane_cacheController : Controller
     {
       
 
@@ -72,7 +72,7 @@ namespace CoreSiganl.Controllers
                 {
                     if (MessageHub.messageContextList.Count(x => x.message_content.lane_id == temp.message_content.lane_id) > 0)
                     {
-                        //var temptt = messageContextList.FirstOrDefault(x => x.message_content.LaneID == temp.message_content.LaneID);
+                      
 
                         MessageHub.messageContextList[MessageHub.messageContextList.FindIndex(x => x.message_content.lane_id == temp.message_content.lane_id)] = temp;
 
