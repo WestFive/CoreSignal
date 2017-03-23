@@ -12,6 +12,8 @@ namespace CoreSiganl.Controllers
     [Route("api/[controller]")]
     public class ClientsController : Controller
     {
+      
+
         // GET api/Clients
         [HttpGet]
         public List<Pf_MessageStatus_Obj> Get()
@@ -19,6 +21,38 @@ namespace CoreSiganl.Controllers
             //return JsonHelper.SerializeObject(MessageHub.messageContextList);
             var value = MessageHub.messageContextList;
             return value;
+        }
+
+        [HttpPost("{LaneJson}")]
+        public string Post(string LaneJson)
+        {
+            
+            try
+            {
+                var temp = JsonHelper.DeserializeJsonToObject<Pf_MessageStatus_Obj>(LaneJson);
+                lock (MessageHub.messageContextList)
+                {
+                    if (MessageHub.messageContextList.Count(x => x.message_content.lane_id == temp.message_content.lane_id) > 0)
+                    {
+                        //var temptt = messageContextList.FirstOrDefault(x => x.message_content.LaneID == temp.message_content.LaneID);
+
+                        MessageHub.messageContextList[MessageHub.messageContextList.FindIndex(x => x.message_content.lane_id == temp.message_content.lane_id)] = temp;
+
+                    }
+                }
+
+                Loger.AddLogText(DateTime.Now.ToString() + "修改:" + temp.message_content.lane_name + "数据成功");
+                return "修改成功";
+            }
+
+                
+                
+            catch (Exception ex)
+            {
+                Loger.AddErrorText("API修改车道数据失败", ex);
+                return "修改失败";
+                
+            }
         }
 
         //// GET api/sessions/idindex

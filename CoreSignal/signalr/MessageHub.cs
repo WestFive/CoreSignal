@@ -23,7 +23,6 @@ namespace CoreSignal.signalr
         ///日志记录
         private readonly ILogger<MessageHub> _logger;
 
-      
         public MessageHub(ILogger<MessageHub> logger)
         {
             _logger = logger;
@@ -72,6 +71,7 @@ namespace CoreSignal.signalr
             }
         }
 
+       
 
 
         /// <summary>
@@ -101,10 +101,19 @@ namespace CoreSignal.signalr
             {
                 if (messageContextList.Count(x => x.message_content.connection_id.ToString() == SendConnectionID) > 0)
                 {
-                    Pf_MessageStatus_Obj temp = messageContextList.FirstOrDefault(x => x.message_content.connection_id.ToString() == SendConnectionID);
-                    temp.message_content.lane_status = JsonHelper.DeserializeJsonToObject<pf_LaneStatus_Obj>(JsonMessage);
-                    Clients.Client(SendConnectionID).reciveStatus(DataHepler.EncodingMessageStatus(temp));
+                    var temp = JsonHelper.DeserializeJsonToObject<Pf_MessageStatus_Obj>(JsonMessage);
                     ///修改后并传递给车道。
+                    lock (messageContextList)
+                    {
+                        if (messageContextList.Count(x => x.message_content.lane_id == temp.message_content.lane_id) > 0)
+                        {
+                            //var temptt = messageContextList.FirstOrDefault(x => x.message_content.LaneID == temp.message_content.LaneID);
+
+                            messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == temp.message_content.lane_id)] = temp;
+
+                            Clients.Client(SendConnectionID).reciveStatus(DataHepler.EncodingMessageStatus(temp));
+                        }
+                    }
                 }
 
                 F5();///刷新
@@ -196,7 +205,7 @@ namespace CoreSignal.signalr
                     });//添加会话对象
 
                     _logger.LogWarning("车道代理{0}连接了", Context.QueryString["ID"]);
-                    Loger.AddLogText("车道代理+:"+Context.QueryString["ID"]+"连接了");
+                    Loger.AddLogText(DateTime.Now.ToString()+"车道代理+:"+Context.QueryString["ID"]+"连接了");
                 }
                 #region 调试赋值的方法
 
@@ -235,7 +244,7 @@ namespace CoreSignal.signalr
                     });//添加会话对象
 
                     _logger.LogWarning("车道监控：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
-                    Loger.AddLogText("车道监控+:" + Context.Request.HttpContext.Connection.RemoteIpAddress + "连接了");
+                    Loger.AddLogText(DateTime.Now.ToString() + "车道监控+:" + Context.Request.HttpContext.Connection.RemoteIpAddress + "连接了");
                 }
                 else //表示为浏览器。
                 {
@@ -253,7 +262,7 @@ namespace CoreSignal.signalr
 
                     });//添加会话对象
                     _logger.LogWarning("浏览器或其他端口：{0},连接了", Context.Request.HttpContext.Connection.RemoteIpAddress);
-                    Loger.AddLogText("浏览器或其他端口：" + Context.Request.HttpContext.Connection.RemoteIpAddress + "连接了");
+                    Loger.AddLogText(DateTime.Now.ToString() + "浏览器或其他端口：" + Context.Request.HttpContext.Connection.RemoteIpAddress + "连接了");
                 }
                     F5();//刷新
                 
@@ -282,6 +291,7 @@ namespace CoreSignal.signalr
                     temp.message_content.connection_id = "offline";
 
                     _logger.LogWarning("车道代理：{0},与服务断开连接", Context.Request.HttpContext.Connection.RemoteIpAddress);
+                    Loger.AddLogText(DateTime.Now.ToString() + temp.message_content.lane_name + "与服务断开连接");
                 }
                 if (sessionObjectList.Count(x => x.ConnectionID == Context.ConnectionId) > 0)
                 {
@@ -289,7 +299,7 @@ namespace CoreSignal.signalr
 
 
                     sessionObjectList.Remove(temp);//包含则移除。
-
+                    Loger.AddLogText(DateTime.Now.ToString() + temp.ConnectionID + "与服务断开连接");
                 }
 
                 F5();
