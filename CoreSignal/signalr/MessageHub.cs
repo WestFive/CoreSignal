@@ -65,7 +65,7 @@ namespace CoreSignal.signalr
                     messageContextList = JsonHelper.DeserializeJsonToList<Pf_MessageStatus_Obj>(File.ReadAllText("wwwroot/config/MessageStatusObj.txt"));
 
             }
-            //if(messageContextList.Count==10)
+            //if (messageContextList.Count == 10)
             //{
 
             //    File.WriteAllText("wwwroot/config/MessageStatusObj.txt", JsonHelper.SerializeObject(messageContextList));
@@ -78,6 +78,7 @@ namespace CoreSignal.signalr
         /// </summary>
         public static List<Pf_MessageStatus_Obj> messageContextList = new List<Pf_MessageStatus_Obj>();
 
+        public static string ReCode;
         /// <summary>
         /// 车道信息列表。
         /// </summary>
@@ -157,7 +158,7 @@ namespace CoreSignal.signalr
                         {
                             if (messageContextList.Count(x => x.message_content.lane_id == statusObj.message_content.lane_id) > 0)
                             {
-
+                                statusObj.message_content.update_time = DateTime.Now.ToString();
                                 messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == statusObj.message_content.lane_id)].message_content = statusObj.message_content;
                                 if (statusObj.message_content.connection_id != "")
                                 {
@@ -167,13 +168,19 @@ namespace CoreSignal.signalr
                                 }
 
                                 F5();//刷新
+                                ReCode = "状态刷新/修改成功";
+                                GetRe();//服务器返回
+                                ReCode = "无状态";
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
+                    ReCode = "状态刷新/修改失败";
+                    GetRe();
                     Loger.AddErrorText("更新状态失败", ex);
+                    ReCode = "无状态";
                 }
 
 
@@ -232,25 +239,20 @@ namespace CoreSignal.signalr
 
                     _logger.LogWarning("车道代理{0}连接了", Context.QueryString["ID"]);
                     Loger.AddLogText(DateTime.Now.ToString() + "车道代理+:" + Context.QueryString["ID"] + "连接了");
+
+
+
+                    //Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
+                    //obj.message_content = new pf_MessageStatusContext_Obj();
+                    //obj.message_content.lane_status = new pf_LaneStatus_Obj();
+                    //obj.message_content.lane_id = "offline";//保存ID
+                    //obj.message_content.lane_id = Context.QueryString["ID"];
+                    //messageContextList.Add(obj);
+
+
                 }
                 #region 调试赋值的方法
 
-                //    Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
-                //    obj.message_content = new pf_MessageStatusContext_Obj();
-                //    obj.message_content.lane_status = new pf_LaneStatus_Obj();
-                //    obj.message_content.lane_id = Context.ConnectionId;//保存ID
-                //    obj.message_content.lane_id = Context.QueryString["ID"];
-                //    if (messageContextList.Count(x => x.message_content.lane_id == obj.message_content.lane_id) > 0)//数据更新
-                //    {
-                //        var temp = messageContextList.FirstOrDefault(x => x.message_content.lane_id == obj.message_content.lane_id);
-                //        //gateList.Remove(temp);
-                //        temp = obj;
-                //        // gateList.Add(temp);
-
-                //    }
-                //    else//数据添加
-                //    {
-                //        messageContextList.Add(obj);
 
 
 
@@ -343,6 +345,10 @@ namespace CoreSignal.signalr
         #endregion
 
 
+        public void GetRe()
+        {
+            Clients.Caller.ReciveRe(ReCode);
+        }
         /*以下为冗余老代码
          */
 

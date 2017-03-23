@@ -37,5 +37,9 @@ namespace Data.Model
         public pf_Damage_Struct[] damages { get;set;}
         
            
+        /// <summary>
+        /// 发送邮件。
+        /// </summary>
+        public string send_email { get; set; }
     }
 }

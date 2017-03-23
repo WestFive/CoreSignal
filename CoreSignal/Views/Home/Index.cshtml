@@ -11,7 +11,8 @@
     <script src="Scripts/jquery.signalR-2.2.1.js"></script>
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
     @*<script src="http://60.205.200.73:5000/signalr/hubs"></script>*@
-    <script src="http://139.199.225.84:5000/signalr/hubs"></script>
+    @*<script src="http://139.199.225.84:5000/signalr/hubs"></script>*@
+    <script src="http://localhost:5000/signalr/hubs"></script>
     <style>
         body {
             background-image: url("http://ohe5u4k9s.bkt.clouddn.com/bg.jpg");
@@ -61,11 +62,17 @@
 
     <script type="text/javascript">
 
-        $.connection.hub.start().done(function () {
-            alert("连接服务器成功");
-        });
-
         var proxy = $.connection.messageHub;
+        $.connection.hub.start(function () {
+            //var condata = { "lane_id": "XM002", "country_code": "CN", "city_code": "XIAXIA", "trminal_code": "SXCT", "lane_name": "G102" };
+            //var str = JSON.stringify(condata)
+            //proxy.server.ChangeStatus("XM001",str);
+        });
+          
+        
+
+       
+
 
         proxy.client.GetSessionList = function (datas) {
             var objs = JSON.parse(datas);
@@ -84,6 +91,10 @@
 
                 );
             }
+
+        }
+        proxy.client.ReciveRe = function (datas) {
+            alert(datas);
 
         }
 

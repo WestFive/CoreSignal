@@ -22,5 +22,10 @@ namespace Data.Model
         /// 残损等级
         /// </summary>
         public string damage_grade { get; set; }
+
+        /// <summary>
+        /// REMARK
+        /// </summary>
+        public string remark { get; set; }
     }
 }
