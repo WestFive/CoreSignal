@@ -51,6 +51,7 @@ namespace CoreSignal.signalr
         ///日志记录
         private readonly ILogger<MessageHub> _logger;
 
+        private bool SetValue = false;
         public MessageHub(ILogger<MessageHub> logger)
         {
             _logger = logger;
@@ -65,11 +66,14 @@ namespace CoreSignal.signalr
                     messageContextList = JsonHelper.DeserializeJsonToList<Pf_MessageStatus_Obj>(File.ReadAllText("wwwroot/config/MessageStatusObj.txt"));
 
             }
-            //if (messageContextList.Count == 10)
-            //{
+            if (SetValue)
+            {
+                if (messageContextList.Count == 10)
+                {
 
-            //    File.WriteAllText("wwwroot/config/MessageStatusObj.txt", JsonHelper.SerializeObject(messageContextList));
-            //}//预留赋值的方法
+                    File.WriteAllText("wwwroot/config/MessageStatusObj.txt", JsonHelper.SerializeObject(messageContextList));
+                }//预留赋值的方法
+            }
         }
         #endregion
         #region 全局变量
@@ -242,11 +246,14 @@ namespace CoreSignal.signalr
 
 
 
-                    //Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
-                    //obj.message_content = new pf_MessageStatusContext_Obj();
-                    //obj.message_content.lane_code = "offline";//保存ID
-                    //obj.message_content.lane_code = Context.QueryString["ID"];
-                    //messageContextList.Add(obj);
+                    if (SetValue)
+                    {
+                        Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
+                        obj.message_content = new pf_MessageStatusContext_Obj();
+                        obj.message_content.lane_code = "offline";//保存ID
+                        obj.message_content.lane_code = Context.QueryString["ID"];
+                        messageContextList.Add(obj);
+                    }
 
 
                 }

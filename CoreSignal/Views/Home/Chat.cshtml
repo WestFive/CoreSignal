@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
     @*<script src="http://60.205.200.73:5000/signalr/hubs"></script>*@
-    <script src="http://139.199.225.84//signalr/hubs"></script>
+    <script src="http://139.199.225.84:5000/signalr/hubs"></script>
     <style>
         body {
             background-image: url("http://ohe5u4k9s.bkt.clouddn.com/bg.jpg");
@@ -42,80 +42,51 @@
         #TText {
             width: 200%;
             height: 100%;
-            border:1px solid;
+            border: 1px solid;
         }
-        
     </style>
 </head>
 <body>
-    <div class="col-md-12" id="ValueDiv">
-          <select id="Select-ConncetionID" onchange="show_sub(this.options[this.options.selectedIndex].value)">
-          
-          </select>
-    </div>
     <div>
-        <textarea id="TText" style="width:300px;height:400px"></textarea>
-        <input type="text" id="IDText" value=""/> <button id="BtnChange" onclick="submit_change()">提交修改</button>
+        <textarea id="TText" style="width:800px;height:600px"></textarea>
+        <input type="text" id="IDText" value="" /> <button id="BtnChange" onclick="submit_change()">提交修改</button>
     </div>
 
 
     <script type="text/javascript">
 
-        $.connection.hub.start().done(function () {
-            alert("连接服务器成功");
-        });
 
         var proxy = $.connection.messageHub;
-        var list1 = new Array();
-       
-        proxy.client.GetUserList = function (datas) {
-         
-            var MessageStatus = JSON.parse(datas);
-            list1 = MessageStatus;
-            $("#Slect-ConnectionID child").empty("");
-            $("#Slect-ConnectionID").empty("");
-            $("#TText").empty("");
+        $.connection.hub.start(function () {
 
-            document.getElementById("TText").value = datas;
-            for (var i = 0; i < MessageStatus.length; i++)
-            {
-                $("#Select-ConncetionID").append(
-                    "<option value=" + MessageStatus[i].MessageContent.ConnectionID + ">" + MessageStatus[i].MessageContent.ConnectionID + "</option>"
-                    
-                );
-                document.getElementById("IDText").value = MessageStatus[0].MessageContent.ConnectionID;
-            }
-        }
 
-        function show_sub(v)
-        {
-            alert("选中了ID" + v);
-            for (var i = 0; i < list1.length;i++)
-            {
-                temp = list1[i];
-                if (temp.MessageContent.ConnectionID == v)
-                {
-                    $("TText").empty("");
-                    document.getElementById("TText").value = JSON.stringify(temp);
-                    document.getElementById("IDText").value = v;
-                }
+            var lane_one = {
+                "lane_code": "XM010",
+                "country_code": "CN",
+                "city_code": "XIAMEN",
+                "terminal_code": "SXCT",
+                "lane_name": "GI02",
+                "direction": "In",
+                "connection_id": "offline",
+                "update_time": "2017/3/21 15:59:50",
+                "lane_status": "null"
 
             }
 
+            var message = {
+                "message_type": "status",
+                "message_content": lane_one
+            }
+
+            proxy.server.ChangeStatus(message.message_content.lane_code, JSON.stringify(message));//发送message对象
+
+
+        });//初始化
+
+        proxy.client.ReciveRe = function (data) {
+            alert(data);//接收执行结果 如果没有触发这个事件 说明根本没有进入到服务修改方法中。
+
         }
-        function submit_change()
-        {
-            
-
-            proxy.server.ChangeGeteMessage(document.getElementById("IDText").value,document.getElementById("TText").value);
-               
-
-        }
-
-
-
-
-
 
     </script>
 </body>
