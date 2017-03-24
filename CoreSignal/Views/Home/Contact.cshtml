@@ -58,7 +58,7 @@
     <div class="span8">
         <table class="table table-bordered" id="MessageContent-Table">
             <tr>
-                <td>车道ID</td>
+                <td>车道code</td>
                 <td>地区编号</td>
                 <td>城市区域编号</td>
                 <td>场站编号</td>
@@ -152,7 +152,7 @@
 
                 var messageContent = lane_caches[i];
                 $("#MessageContent-Table").append(
-                    "<tr><td>" + messageContent.lane_id
+                    "<tr><td>" + messageContent.lane_code
                     + "</td><td>" + messageContent.country_code
                     + "</td><td>" + messageContent.city_code
                     + "</td><td>" + messageContent.terminal_code

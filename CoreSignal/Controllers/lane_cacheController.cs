@@ -23,8 +23,8 @@ namespace CoreSiganl.Controllers
             return value;
         }
 
-        [HttpPost("{lane_id}")]
-        public string Post([FromQuery]string lane_id,[FromBody]pf_MessageStatusContext_Obj message_status)
+        [HttpPost("{lane_code}")]
+        public string Post([FromQuery]string lane_code,[FromBody]pf_MessageStatusContext_Obj message_status)
         {
             
             try
@@ -33,9 +33,9 @@ namespace CoreSiganl.Controllers
 
                lock(MessageHub.messageContextList)
                 {
-                    if(MessageHub.messageContextList.Count(x=>x.message_content.lane_id==message_status.lane_id)>0)
+                    if(MessageHub.messageContextList.Count(x=>x.message_content.lane_code==message_status.lane_code)>0)
                     {
-                        MessageHub.messageContextList[MessageHub.messageContextList.FindIndex(x =>x.message_content.lane_id == message_status.lane_id)].message_content = message_status;
+                        MessageHub.messageContextList[MessageHub.messageContextList.FindIndex(x =>x.message_content.lane_code == message_status.lane_code)].message_content = message_status;
                     }
                 }
 

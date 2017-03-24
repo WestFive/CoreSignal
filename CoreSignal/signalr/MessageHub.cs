@@ -103,7 +103,7 @@ namespace CoreSignal.signalr
                     messageStatusContentList.Add(item.message_content);
                 }
 
-                messageContextList.OrderBy(x => x.message_content.lane_id);
+                messageContextList.OrderBy(x => x.message_content.lane_code);
                 //Clients.All.GetUserList(JsonHelper.SerializeObject(messageContextList));
                 Clients.All.GetStatusList(JsonHelper.SerializeObject(messageStatusContentList));
                 Clients.All.GetSessionList(JsonHelper.SerializeObject(sessionObjectList));
@@ -151,15 +151,15 @@ namespace CoreSignal.signalr
                     Pf_MessageStatus_Obj statusObj = (Pf_MessageStatus_Obj)obj;
 
 
-                    if (messageContextList.Count(x => x.message_content.lane_id.ToString() == laneID) > 0)
+                    if (messageContextList.Count(x => x.message_content.lane_code.ToString() == laneID) > 0)
                     {
 
                         lock (messageContextList)
                         {
-                            if (messageContextList.Count(x => x.message_content.lane_id == statusObj.message_content.lane_id) > 0)
+                            if (messageContextList.Count(x => x.message_content.lane_code == statusObj.message_content.lane_code) > 0)
                             {
                                 statusObj.message_content.update_time = DateTime.Now.ToString();
-                                messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == statusObj.message_content.lane_id)].message_content = statusObj.message_content;
+                                messageContextList[messageContextList.FindIndex(x => x.message_content.lane_code == statusObj.message_content.lane_code)].message_content = statusObj.message_content;
                                 if (statusObj.message_content.connection_id != "")
                                 {
                                     //如果有这个客户端就推送给这个客户端
@@ -218,10 +218,10 @@ namespace CoreSignal.signalr
                 {
 
 
-                    if (messageContextList.Count(x => x.message_content.lane_id == Context.QueryString["ID"]) > 0)
+                    if (messageContextList.Count(x => x.message_content.lane_code == Context.QueryString["ID"]) > 0)
                     {
 
-                        var temp = messageContextList.FirstOrDefault(x => x.message_content.lane_id == Context.QueryString["ID"]);
+                        var temp = messageContextList.FirstOrDefault(x => x.message_content.lane_code == Context.QueryString["ID"]);
 
                         temp.message_content.connection_id = Context.ConnectionId;
 
@@ -244,8 +244,8 @@ namespace CoreSignal.signalr
 
                     //Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
                     //obj.message_content = new pf_MessageStatusContext_Obj();
-                    //obj.message_content.lane_id = "offline";//保存ID
-                    //obj.message_content.lane_id = Context.QueryString["ID"];
+                    //obj.message_content.lane_code = "offline";//保存ID
+                    //obj.message_content.lane_code = Context.QueryString["ID"];
                     //messageContextList.Add(obj);
 
 
@@ -365,11 +365,11 @@ namespace CoreSignal.signalr
         //            ///修改后并传递给车道。
         //            lock (messageContextList)
         //            {
-        //                if (messageContextList.Count(x => x.message_content.lane_id == temp.message_content.lane_id) > 0)
+        //                if (messageContextList.Count(x => x.message_content.lane_code == temp.message_content.lane_code) > 0)
         //                {
         //                    //var temptt = messageContextList.FirstOrDefault(x => x.message_content.LaneID == temp.message_content.LaneID);
 
-        //                    messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == temp.message_content.lane_id)] = temp;
+        //                    messageContextList[messageContextList.FindIndex(x => x.message_content.lane_code == temp.message_content.lane_code)] = temp;
 
         //                    Clients.Client(SendConnectionID).reciveStatus(JsonHelper.SerializeObject(temp));
         //                }
@@ -407,11 +407,11 @@ namespace CoreSignal.signalr
         //        temp.message_content.update_time = DateTime.Now.ToString();
         //        lock (messageContextList)
         //        {
-        //            if (messageContextList.Count(x => x.message_content.lane_id == temp.message_content.lane_id) > 0)
+        //            if (messageContextList.Count(x => x.message_content.lane_code == temp.message_content.lane_code) > 0)
         //            {
         //                //var temptt = messageContextList.FirstOrDefault(x => x.message_content.LaneID == temp.message_content.LaneID);
 
-        //                messageContextList[messageContextList.FindIndex(x => x.message_content.lane_id == temp.message_content.lane_id)] = temp;
+        //                messageContextList[messageContextList.FindIndex(x => x.message_content.lane_code == temp.message_content.lane_code)] = temp;
 
         //                F5();//刷新
         //            }

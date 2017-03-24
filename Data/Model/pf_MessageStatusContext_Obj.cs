@@ -11,7 +11,7 @@ namespace Data.Model
         /// <summary>
         /// 车道ID
         /// </summary>
-        public string lane_id { get;  set; }
+        public string lane_code { get;  set; }
         /// <summary>
         /// 地区编号
         /// </summary>
