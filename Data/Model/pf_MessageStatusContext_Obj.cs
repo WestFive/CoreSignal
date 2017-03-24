@@ -43,7 +43,7 @@ namespace Data.Model
         /// <summary>
         ///  车道状态（对象）
         /// </summary>
-        public pf_LaneStatus_Obj lane_status { get; set; }
+        public string lane_status { get; set; }
 
 
 

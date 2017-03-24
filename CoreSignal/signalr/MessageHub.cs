@@ -244,7 +244,6 @@ namespace CoreSignal.signalr
 
                     //Pf_MessageStatus_Obj obj = new Pf_MessageStatus_Obj();
                     //obj.message_content = new pf_MessageStatusContext_Obj();
-                    //obj.message_content.lane_status = new pf_LaneStatus_Obj();
                     //obj.message_content.lane_id = "offline";//保存ID
                     //obj.message_content.lane_id = Context.QueryString["ID"];
                     //messageContextList.Add(obj);

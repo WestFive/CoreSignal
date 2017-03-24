@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Model\pf_Containers_Struct.cs" />
+    <Compile Remove="Model\pf_Damage_Struct.cs" />
+    <Compile Remove="Model\pf_LaneStatus_Obj.cs" />
     <Compile Remove="Model\pf_ProgressBar_Obj.cs" />
   </ItemGroup>
 
