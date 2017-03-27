@@ -23,6 +23,16 @@ namespace Data.Model
 
     }
 
+
+    public class pf_JobContet_Obj
+    {
+        public string guid { get; set; }
+
+        public string lane_status { get; set; }
+    }
+        
+
+
     /// <summary>
     /// 指令消息对象
     /// </summary>

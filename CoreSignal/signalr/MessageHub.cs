@@ -88,6 +88,11 @@ namespace CoreSignal.signalr
         /// 车道信息列表。
         /// </summary>
         public static List<pf_MessageStatusContext_Obj> StatusList = new List<pf_MessageStatusContext_Obj>();
+
+        /// <summary>
+        /// 作业信息列表
+        /// </summary>
+        public static List<pf_JobContet_Obj> JobList = new List<pf_JobContet_Obj>();
         /// <summary>
         /// 会话信息列表。
         /// </summary>
@@ -164,6 +169,9 @@ namespace CoreSignal.signalr
                         }
                         break;
                     case "Job":
+                        var  jobObj = JsonHelper.DeserializeJsonToObject<pf_JobContet_Obj>(JsonHelper.SerializeObject(obj.message_content));
+
+
                         break;
                 }
             }
@@ -237,7 +245,7 @@ namespace CoreSignal.signalr
                             var temp = StatusList.FirstOrDefault(x => x.lane_code == Context.QueryString["Name"]);
 
                             temp.connection_id = Context.ConnectionId;
-                            
+
 
                             //数据更新
                         }
@@ -267,7 +275,7 @@ namespace CoreSignal.signalr
                 AddToSession();//加入车道缓存。
                 F5();//刷新
                 #region 测试用
-                
+
                 #endregion
             }
             catch (Exception ex)
@@ -292,6 +300,7 @@ namespace CoreSignal.signalr
                     // StatusList.Remove(temp);
                     //在就移除 退出
                     temp.connection_id = "offline";
+                    temp.lane_status = "{}";
 
                     _logger.LogWarning("车道代理：{0},与服务断开连接", Context.Request.HttpContext.Connection.RemoteIpAddress);
                     Loger.AddLogText(DateTime.Now.ToString() + temp.lane_name + "与服务断开连接");
