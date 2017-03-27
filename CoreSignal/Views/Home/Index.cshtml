@@ -62,23 +62,25 @@
 
     <script type="text/javascript">
 
+        $.connection.hub.qs = { Type: "Broswer", Name: "Broswer" };
+        
         var proxy = $.connection.messageHub;
         $.connection.hub.start(function () {
             //var condata = { "lane_id": "XM002", "country_code": "CN", "city_code": "XIAXIA", "trminal_code": "SXCT", "lane_name": "G102" };
             //var str = JSON.stringify(condata)
             //proxy.server.ChangeStatus("XM001",str);
         });
-          
-        
 
-       
+
+
+
 
 
         proxy.client.GetSessionList = function (datas) {
             var objs = JSON.parse(datas);
             $("#Main-Table  tr:not(:first)").empty("");
             for (var i = 0; i < objs.length; i++) {
-           
+
 
                 $('#Main-Table').append(
                     "<tr><td>" + objs[i].ConnectionID

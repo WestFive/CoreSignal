@@ -18,8 +18,8 @@ namespace CoreSiganl.Controllers
         [HttpGet]
         public List<pf_MessageStatusContext_Obj> Get()
         {
-            //return JsonHelper.SerializeObject(MessageHub.messageContextList);
-            var value = MessageHub.messageStatusContentList;
+            //return JsonHelper.SerializeObject(MessageHub.StatusList);
+            var value = MessageHub.StatusList;
             return value;
         }
 
@@ -31,11 +31,12 @@ namespace CoreSiganl.Controllers
             {
                
 
-               lock(MessageHub.messageContextList)
+               lock(MessageHub.StatusList)
                 {
-                    if(MessageHub.messageContextList.Count(x=>x.message_content.lane_code==message_status.lane_code)>0)
+                    if(MessageHub.StatusList.Count(x=>x.lane_code==message_status.lane_code)>0)
                     {
-                        MessageHub.messageContextList[MessageHub.messageContextList.FindIndex(x =>x.message_content.lane_code == message_status.lane_code)].message_content = message_status;
+                        
+                        MessageHub.StatusList[MessageHub.StatusList.FindIndex(x =>x.lane_code == message_status.lane_code)] = message_status;
                     }
                 }
 
