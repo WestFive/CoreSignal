@@ -47,18 +47,18 @@
     </style>
 </head>
 <body>
-    <div class="span8">
+    @*<div class="span8">
         <table class="table table-bordered" id="MessageStatus-Table">
             <tr>
                 <td>消息类型</td>
                 <td>消息对象（对象）</td>
             </tr>
         </table>
-    </div>
+    </div>*@
     <div class="span8">
         <table class="table table-bordered" id="MessageContent-Table">
             <tr>
-                <td>车道ID</td>
+                <td>车道code</td>
                 <td>地区编号</td>
                 <td>城市区域编号</td>
                 <td>场站编号</td>
@@ -139,8 +139,8 @@
 
         var proxy = $.connection.messageHub; //连接到具体的Hub.
 
-        proxy.client.GetUserList = function (datas) {
-            var MessageStatus = JSON.parse(datas);
+        proxy.client.GetStatusList = function (datas) {
+            var lane_caches = JSON.parse(datas);
 
             $("#MessageStatus-Table  tr:not(:first)").empty("");
             $("#MessageContent-Table tr:not(:first)").empty("");
@@ -148,15 +148,11 @@
             $("#Containers-Table tr:not(:first)").empty("");
             $("#Damage-Table tr:not(:first)").empty(""); //清空列表缓存
 
-            for (var i = 0; i < MessageStatus.length; i++) {       
-                $('#MessageStatus-Table').append(
-                    "<tr><td>" + MessageStatus[i].message_type
-                    + "</td><td>" + MessageStatus[i].message_content //实际为一个MessageContent对象
-                    +"</tr>"
-                );
-                var messageContent = MessageStatus[i].message_content;
+            for (var i = 0; i < lane_caches.length; i++) {
+
+                var messageContent = lane_caches[i];
                 $("#MessageContent-Table").append(
-                    "<tr><td>" + messageContent.lane_id
+                    "<tr><td>" + messageContent.lane_code
                     + "</td><td>" + messageContent.country_code
                     + "</td><td>" + messageContent.city_code
                     + "</td><td>" + messageContent.terminal_code

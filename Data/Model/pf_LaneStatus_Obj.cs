@@ -8,6 +8,11 @@ namespace Data.Model
 {
     public class pf_LaneStatus_Obj
     {
+
+        /// <summary>
+        /// 是否有车
+        /// </summary>
+        public bool has_truck { get; set; }
         /// <summary>
         /// 锁定状态
         /// </summary>
@@ -58,11 +63,11 @@ namespace Data.Model
         public string ic_card_no { get; set; }
 
 
-        public pf_ProgressBar_Obj progress_bar { get; set; }
-        ///// <summary>
-        ///// 进度状态 
-        ///// </summary>
-        //public string[] progress_bar { get; set; }
+        //public pf_ProgressBar_Obj progress_bar { get; set; }
+        /// <summary>
+        /// 进度状态 
+        /// </summary>
+        public string[] progress_bar { get; set; }
         /// <summary>
         /// 验残次数
         /// </summary>
@@ -71,6 +76,10 @@ namespace Data.Model
         /// 残损记录数
         /// </summary>
         public int damage_counts { get; set; }
+        /// <summary>
+        /// 提交次数
+        /// </summary>
+        public int submit_counts { get; set; }
         /// <summary>
         /// 车头图片URL
         /// </summary>
