@@ -142,7 +142,7 @@ namespace CoreSignal.signalr
                             {
                                 if (StatusList.Count(x => x.lane_code == statusObj.lane_code) > 0)
                                 {
-                                    statusObj.update_time = DateTime.Now.ToString();
+                                    statusObj.update_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                                     StatusList[StatusList.FindIndex(x => x.lane_code == statusObj.lane_code)] = statusObj;//车道对象
                                     if (statusObj.connection_id != "")
                                     {
@@ -169,7 +169,7 @@ namespace CoreSignal.signalr
                         }
                         break;
                     case "Job":
-                        var  jobObj = JsonHelper.DeserializeJsonToObject<pf_JobContet_Obj>(JsonHelper.SerializeObject(obj.message_content));
+                        var jobObj = JsonHelper.DeserializeJsonToObject<pf_JobContet_Obj>(JsonHelper.SerializeObject(obj.message_content));
 
 
                         break;
