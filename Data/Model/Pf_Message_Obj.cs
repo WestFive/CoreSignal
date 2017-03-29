@@ -45,6 +45,8 @@ namespace Data.Model
 
         public string action_code { get; set; }
 
+        public string action_content { get; set; }
+
 
     }
 

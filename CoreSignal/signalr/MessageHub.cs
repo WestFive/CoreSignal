@@ -148,7 +148,7 @@ namespace CoreSignal.signalr
                                     {
                                         var reobj = new Pf_Message_Obj { message_type = "Status", message_content = statusObj };//编码成消息对象
 
-                                        Clients.Client(statusObj.connection_id).reciveStatus(JsonHelper.SerializeObject(statusObj));  //如果有这个客户端就推送给这个客户端
+                                        Clients.Client(statusObj.connection_id).reciveStatus(JsonHelper.SerializeObject(reobj));  //如果有这个客户端就推送给这个客户端
 
                                     }
 
